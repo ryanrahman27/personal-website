@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ryan Rahman — Robotics &amp; Foundational Models</title>
-<meta name="description" content="Ryan Rahman — Mechatronics Engineering + AI at the University of Waterloo. Research Engineer at AXIBO working on foundational models and robot learning for manipulation." />
+<title>Ryan Rahman · Robotics &amp; Foundational Models</title>
+<meta name="description" content="Ryan Rahman. Mechatronics Engineering + AI at the University of Waterloo. Research Engineer at AXIBO working on foundational models and robot learning for manipulation." />
 <style>
   /* ---------- Tokens ---------- */
   :root {
@@ -374,42 +374,42 @@
     <section id="experience" class="panel" role="tabpanel" aria-labelledby="tab-experience">
 
       <div class="entry">
-        <p class="sidenote"><b>Amazon</b><br>Texas, US · Hybrid<br>Aug 2026 — present</p>
+        <p class="sidenote"><b>Amazon</b><br>Texas, US · Hybrid<br>Aug 2026 – present</p>
         <p class="role">Student Researcher</p>
         <p class="org">Amazon <span class="dot">·</span> in affiliation with UWaterloo</p>
         <p class="desc">Foundational models for last-mile delivery. <span class="tagline">Incoming Fall 2027.</span></p>
       </div>
 
       <div class="entry">
-        <p class="sidenote"><b>AXIBO</b><br>Cambridge, ON · On-site<br>Apr 2026 — present</p>
+        <p class="sidenote"><b>AXIBO</b><br>Cambridge, ON · On-site<br>Apr 2026 – present</p>
         <p class="role">Research Engineer</p>
         <p class="org">AXIBO <span class="dot">·</span> Internship</p>
         <p class="desc">Foundational models for humanoid manipulation. See <a class="ref" href="#research">§Research</a> and <a class="ref" href="#preprints">§Preprints</a> for the work under this role.</p>
       </div>
 
       <div class="entry">
-        <p class="sidenote"><b>University of Waterloo</b><br>Waterloo, ON · On-site<br>Jan 2026 — Apr 2026</p>
+        <p class="sidenote"><b>University of Waterloo</b><br>Waterloo, ON · On-site<br>Jan 2026 – Apr 2026</p>
         <p class="role">Student Researcher</p>
         <p class="org">University of Waterloo <span class="dot">·</span> CL2 Lab</p>
         <p class="desc">Reinforcement learning for autonomous racing, under Prof. Yash Vardhan Pant.</p>
       </div>
 
       <div class="entry">
-        <p class="sidenote"><b>Syncere</b><br>Palo Alto, CA · On-site<br>Dec 2025 — Feb 2026</p>
+        <p class="sidenote"><b>Syncere</b><br>Palo Alto, CA · On-site<br>Dec 2025 – Feb 2026</p>
         <p class="role">Robotics Engineer</p>
         <p class="org">Syncere <span class="dot">·</span> Internship</p>
         <p class="desc">Teleoperation and imitation learning for laundry-folding robotic lamps.</p>
       </div>
 
       <div class="entry">
-        <p class="sidenote"><b>WATonomous</b><br>Waterloo, ON · Remote<br>Jan 2025 — Nov 2025</p>
+        <p class="sidenote"><b>WATonomous</b><br>Waterloo, ON · Remote<br>Jan 2025 – Nov 2025</p>
         <p class="role">Robotics Engineer</p>
         <p class="org">WATonomous <span class="dot">·</span> University of Waterloo</p>
         <p class="desc">Reinforcement learning for dexterous manipulation, evaluated in Isaac Lab with sim-to-real transfer.</p>
       </div>
 
       <div class="entry">
-        <p class="sidenote"><b>NETINT Technologies</b><br>Vancouver, BC · On-site<br>Jan 2025 — May 2025</p>
+        <p class="sidenote"><b>NETINT Technologies</b><br>Vancouver, BC · On-site<br>Jan 2025 – May 2025</p>
         <p class="role">Software Engineer</p>
         <p class="org">NETINT Technologies <span class="dot">·</span> Internship</p>
         <p class="desc">Computer vision for visual corruption detection in video streams, and real-time generative video streaming.</p>
@@ -421,15 +421,15 @@
       <p>Three tracks from my work at AXIBO. Each pairs a published method with a concrete engineering problem on a real robot; the figures redraw the deployed architecture.</p>
 
       <!-- 2.1 Junior -->
-      <h3 class="sub"><span class="no">1</span> A Deployed Bimanual Manipulation Policy Stack — <i>Junior</i></h3>
+      <h3 class="sub"><span class="no">1</span> A Deployed Bimanual Manipulation Policy Stack: <i>Junior</i></h3>
       <p class="sidenote"><b>Role</b><br>End-to-end ownership: demo-collection hardware → policy training → closed-loop deployment on Junior's dual arms.</p>
 
       <figure class="photo-fig">
         <div class="photo-row">
-          <img src="assets/junior-1.jpg" alt="Junior, AXIBO's humanoid robot — upper body" loading="lazy" onerror="this.closest('figure').style.display='none'" />
-          <img src="assets/junior-2.jpg" alt="Junior, AXIBO's humanoid robot — full body" loading="lazy" onerror="this.closest('figure').style.display='none'" />
+          <img src="assets/junior-1.jpg" alt="Junior, AXIBO's humanoid robot, upper body" loading="lazy" onerror="this.closest('figure').style.display='none'" />
+          <img src="assets/junior-2.jpg" alt="Junior, AXIBO's humanoid robot, full body" loading="lazy" onerror="this.closest('figure').style.display='none'" />
         </div>
-        <figcaption><b>Junior.</b> AXIBO's bimanual humanoid platform — the robot this policy stack is deployed on.</figcaption>
+        <figcaption><b>Junior.</b> AXIBO's bimanual humanoid platform, the robot this policy stack is deployed on.</figcaption>
       </figure>
 
       <p>A single fixed action-chunk horizon trades foresight for precision, yet bimanual tasks need both. Camera, inference, and control delays misalign predicted actions with physical execution, and per-chunk inference alone caps effective control frequency on contact-rich tasks. Junior's deployed stack composes four ideas so each addresses a different failure mode: a <b>π0.5</b> flow-matching backbone, a <b>Mixture of Horizons</b> action head with a learnable gate, inference-time <b>latency matching</b> adapted from UMI, and <b>action interpolation</b> between predicted chunks drawn from the 2025 BEHAVIOR Challenge-winning solution.</p>
@@ -449,7 +449,7 @@
             <div class="node accent"><span class="t">Deployed on Junior</span><span class="d">closed-loop dual-arm control</span></div>
           </div>
         </div>
-        <figcaption><b>Figure 1.</b> Junior's deployed policy stack. Each stage targets a distinct failure mode — foresight/precision, temporal misalignment, and control-frequency ceiling.</figcaption>
+        <figcaption><b>Figure 1.</b> Junior's deployed policy stack. Each stage targets a distinct failure mode: foresight/precision, temporal misalignment, and control-frequency ceiling.</figcaption>
       </figure>
 
       <div class="stats">
@@ -461,9 +461,9 @@
 
       <!-- 2.2 DSRL -->
       <h3 class="sub"><span class="no">2</span> Noise-Space RL Fine-Tuning of Flow-Matching Policies</h3>
-      <p class="sidenote"><b>Basis</b><br>DSRL — <i>Steering Your Diffusion Policy with Latent Space Reinforcement Learning</i>, Wagenmaker et al., CoRL 2025.</p>
+      <p class="sidenote"><b>Basis</b><br>DSRL: <i>Steering Your Diffusion Policy with Latent Space Reinforcement Learning</i>, Wagenmaker et al., CoRL 2025.</p>
       <p>Fine-tuning a diffusion or flow policy's weights with RL is unstable and demands full access to model internals, while behavior-cloned policies plateau without costly additional demonstrations. DSRL sidesteps both: instead of updating weights, it trains a small RL agent to select the <b>noise seed</b> that initializes denoising, steering a frozen, black-box base policy toward better behavior.</p>
-      <p>I applied DSRL-style noise-space RL to our deployed VLA policy's action head, training a lightweight SAC agent (~500K parameters) to pick the seed that steers the frozen base policy. Because RL runs over the latent-noise space — never through the denoiser — no gradients touch the base weights and no model internals are required. This post-training contributed to a <b>30% manipulation-performance gain over imitation baselines</b>, adapting a frozen policy without modifying its weights or collecting extra demonstrations.</p>
+      <p>I applied DSRL-style noise-space RL to our deployed VLA policy's action head, training a lightweight SAC agent (~500K parameters) to pick the seed that steers the frozen base policy. Because RL runs over the latent-noise space, never through the denoiser, so no gradients touch the base weights and no model internals are required. This post-training contributed to a <b>30% manipulation-performance gain over imitation baselines</b>, adapting a frozen policy without modifying its weights or collecting extra demonstrations.</p>
 
       <figure>
         <div class="plate">
@@ -477,7 +477,7 @@
             <div class="node"><span class="t">Action executed</span><span class="d">steered behavior</span></div>
           </div>
         </div>
-        <figcaption><b>Figure 2.</b> DSRL-style noise-space RL. The agent optimizes over the latent-noise input, not the policy weights — keeping the base policy frozen and black-box compatible.</figcaption>
+        <figcaption><b>Figure 2.</b> DSRL-style noise-space RL. The agent optimizes over the latent-noise input, not the policy weights, keeping the base policy frozen and black-box compatible.</figcaption>
       </figure>
 
       <div class="stats">
@@ -489,9 +489,9 @@
 
       <!-- 2.3 Latent WAM -->
       <h3 class="sub"><span class="no">3</span> Latent World-Action Models (VLA-JEPA)</h3>
-      <p class="sidenote"><b>Basis</b><br>VLA-JEPA — <i>Enhancing Vision-Language-Action Models with a Latent World Model</i>, Sun et al., 2026.</p>
-      <p>Standard VLA policies map observations directly to actions without modeling how the scene will evolve, and pixel-space prediction is brittle to appearance and camera changes. Following VLA-JEPA, I built action-conditioned latent world-action models that predict future <b>latent</b> states rather than pixels — a leakage-free formulation in which future frames are only ever targets, never inputs.</p>
-      <p>The model encodes the current observation plus action context into a latent representation and predicts 10-step, action-conditioned latent dynamics with no pixel reconstruction. A two-stage recipe — JEPA-style pretraining followed by action-head fine-tuning — integrates the predicted latent rollouts with downstream VLA action heads. I evaluated rollout consistency across manipulation trajectories to assess temporal coherence of the learned dynamics.</p>
+      <p class="sidenote"><b>Basis</b><br>VLA-JEPA: <i>Enhancing Vision-Language-Action Models with a Latent World Model</i>, Sun et al., 2026.</p>
+      <p>Standard VLA policies map observations directly to actions without modeling how the scene will evolve, and pixel-space prediction is brittle to appearance and camera changes. Following VLA-JEPA, I built action-conditioned latent world-action models that predict future <b>latent</b> states rather than pixels, a leakage-free formulation in which future frames are only ever targets, never inputs.</p>
+      <p>The model encodes the current observation plus action context into a latent representation and predicts 10-step, action-conditioned latent dynamics with no pixel reconstruction. A two-stage recipe (JEPA-style pretraining followed by action-head fine-tuning) integrates the predicted latent rollouts with downstream VLA action heads. I evaluated rollout consistency across manipulation trajectories to assess temporal coherence of the learned dynamics.</p>
 
       <figure>
         <div class="plate">
@@ -527,13 +527,13 @@
 
     <!-- ================= PREPRINTS ================= -->
     <section id="preprints" class="panel" role="tabpanel" aria-labelledby="tab-preprints" hidden>
-      <p>Ongoing research I'm actively developing. Each is a living document; the full write-up — figures, equations, tables, and references — is linked below.</p>
+      <p>Ongoing research I'm actively developing. Each is a living document; the full write-up (figures, equations, tables, and references) is linked below.</p>
 
       <div class="preprint">
         <p class="status">Research proposal · study in progress</p>
         <h3>Diffusion-Trained Multimodal Backbones for Action-Token Representations in Flow-Matching VLA Policies</h3>
         <p class="q">Does a diffusion-trained bidirectional multimodal backbone produce better action-token hidden states than a causal/autoregressive VLM backbone when both use the same flow-matching action expert?</p>
-        <p class="body">A controlled study on the LIBERO benchmark that isolates the backbone as the only variable — swapping Dream-7B (discrete-diffusion) for Qwen2.5-7B, its own autoregressive base, under one shared flow-matching action expert. Because the two backbones share initialization and architecture and differ chiefly in training objective, the C&minus;D contrast identifies the effect of the diffusion pretraining <i>prior</i> rather than scale or data. Beyond rollout success, I probe the action-token hidden states directly against simulator ground truth to test whether the diffusion prior organizes trajectory phase, contact timing, and subtask ordering better.</p>
+        <p class="body">A controlled study on the LIBERO benchmark that isolates the backbone as the only variable: it swaps Dream-7B (discrete-diffusion) for Qwen2.5-7B, its own autoregressive base, under one shared flow-matching action expert. Because the two backbones share initialization and architecture and differ chiefly in training objective, the C&minus;D contrast identifies the effect of the diffusion pretraining <i>prior</i> rather than scale or data. Beyond rollout success, I probe the action-token hidden states directly against simulator ground truth to test whether the diffusion prior organizes trajectory phase, contact timing, and subtask ordering better.</p>
         <div class="tags"><span class="tag">π0.5 / OpenPI</span><span class="tag">flow matching</span><span class="tag">LIBERO</span><span class="tag">representation probing</span></div>
         <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/diffusion-vla.html">Read the proposal →</a></p>
       </div>
@@ -542,7 +542,7 @@
         <p class="status">Research proposal · IROS 2026 Robotic Origami Challenge</p>
         <h3>Origami-MoH: Tactile-Augmented Mixture-of-Horizons Flow Policies for Bimanual Dexterous Origami</h3>
         <p class="q">On a 65-DoF bimanual dexterous platform with rich tactile sensing, does augmenting a flow-matching VLA with a Mixture-of-Horizons reactive head and progressive tactile fusion improve autonomous paper folding over a vision-only policy?</p>
-        <p class="body">A π0.5 flow policy made <i>reactive</i> — multi-horizon action prediction with disagreement-based replanning — and <i>contact-aware</i> through progressive tactile fusion, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder. Trained as a single vision-conditioned policy over a fixed six-fold sequence across 143 tactile-rich sessions, with a staged Phase 0–4 plan whose go/no-go criteria isolate the value of tactile sensing before the most invasive fusion is built, plus the systems work to fine-tune a 65-DoF policy from a 32-DoF base in OpenPI.</p>
+        <p class="body">A π0.5 flow policy made <i>reactive</i> (multi-horizon action prediction with disagreement-based replanning) and <i>contact-aware</i> through progressive tactile fusion, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder. Trained as a single vision-conditioned policy over a fixed six-fold sequence across 143 tactile-rich sessions, with a staged Phase 0–4 plan whose go/no-go criteria isolate the value of tactile sensing before the most invasive fusion is built, plus the systems work to fine-tune a 65-DoF policy from a 32-DoF base in OpenPI.</p>
         <div class="tags"><span class="tag">π0.5</span><span class="tag">Mixture of Horizons</span><span class="tag">tactile fusion</span><span class="tag">65-DoF bimanual</span></div>
         <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/origami-moh.html">Read the proposal →</a></p>
       </div>
@@ -550,7 +550,7 @@
 
     <!-- ================= DISCUSSION ================= -->
     <section id="discussion" class="panel" role="tabpanel" aria-labelledby="tab-discussion" hidden>
-      <p>Notes on papers I've been reading in robot learning — my read on what's interesting, what's limited, and where it points next. Each links the paper it's about.</p>
+      <p>Notes on papers I've been reading in robot learning: my read on what's interesting, what's limited, and where it points next. Each links the paper it's about.</p>
 
       <details class="post">
         <summary>
@@ -564,7 +564,7 @@
           <span class="pc-meta">NVIDIA Technical Blog · 2026</span>
         </a>
         <div class="post-body">
-          <p>Definitely worth a read if you're interested in foundational models for robotics and the direction the field is going in — pretraining on video to imagine how the world evolves, then fine-tuning that same backbone to act. It's the throughline behind a lot of what I'm working on right now.</p>
+          <p>Definitely worth a read if you're interested in foundational models for robotics and the direction the field is going in: pretraining on video to imagine how the world evolves, then fine-tuning that same backbone to act. It's the throughline behind a lot of what I'm working on right now.</p>
         </div>
       </div>
       </details>
@@ -577,7 +577,7 @@
         <div class="post-inner">
         <a class="paper-card" href="https://arxiv.org/abs/2505.03729" target="_blank" rel="noopener">
           <span class="pc-label">Paper</span>
-          <span class="pc-title">VideoMimic — Visual Imitation Enables Contextual Humanoid Control</span>
+          <span class="pc-title">VideoMimic: Visual Imitation Enables Contextual Humanoid Control</span>
           <span class="pc-meta">Allshire, Choi, Zhang et al. · CoRL 2025 (Best Student Paper) · arXiv:2505.03729</span>
         </a>
         <div class="post-body">
@@ -591,7 +591,7 @@
             <li><b>distillation</b> <span class="ar">→</span> a single multi-skill policy</li>
           </ul>
           <p>It effectively turns passive video into a structured control signal, without relying on teleoperation or motion capture. The limitation is that it's still fundamentally trajectory-tracking: it inherits biases from reconstruction and has no explicit mechanism for reasoning about alternative futures or task objectives.</p>
-          <p>That raises a more interesting direction — what happens if we replace trajectory tracking with a learned world model?</p>
+          <p>That raises a more interesting direction: what happens if we replace trajectory tracking with a learned world model?</p>
           <div class="pipeline">video → latent dynamics model → action policy</div>
           <p>That would decouple perception (what is happening), prediction (what will happen), and control (what to do). I'm exploring a small version of this pipeline, starting from extracting motion priors from video and training a policy in simulation.</p>
         </div>
@@ -611,8 +611,8 @@
         </a>
         <div class="post-body">
           <p>I've been diving into real-time execution for VLA models, and RTC stood out. The core idea is simple: instead of predicting actions, executing them, and then pausing to think again, RTC predicts the next action chunk <i>while the robot is still moving</i>.</p>
-          <p>By overlapping chunks and using a "freeze + inpaint" strategy, part of the trajectory is treated as fixed while the rest is generated — effectively turning the problem into constrained sequence prediction. This removes the latency bottleneck and shifts VLA policies from batch-style inference toward streaming control, much closer to how real robots actually operate.</p>
-          <p>One interesting limitation: overlapping actions are frozen, so the system can't correct mistakes mid-chunk — it can only adapt going forward. That raises a deeper question about how much of the future a robot should commit to at any given moment. It feels like an important step toward making generalist policies actually deployable, and I'd love to explore combining it with residual RL or adaptive horizons for something even more reactive.</p>
+          <p>By overlapping chunks and using a "freeze + inpaint" strategy, part of the trajectory is treated as fixed while the rest is generated, effectively turning the problem into constrained sequence prediction. This removes the latency bottleneck and shifts VLA policies from batch-style inference toward streaming control, much closer to how real robots actually operate.</p>
+          <p>One interesting limitation: overlapping actions are frozen, so the system can't correct mistakes mid-chunk: it can only adapt going forward. That raises a deeper question about how much of the future a robot should commit to at any given moment. It feels like an important step toward making generalist policies actually deployable, and I'd love to explore combining it with residual RL or adaptive horizons for something even more reactive.</p>
         </div>
       </div>
       </details>
@@ -625,13 +625,13 @@
         <div class="post-inner">
         <a class="paper-card" href="https://arxiv.org/abs/2412.10345" target="_blank" rel="noopener">
           <span class="pc-label">Paper</span>
-          <span class="pc-title">TraceVLA — Visual Trace Prompting Enhances Spatial-Temporal Awareness for Generalist Robotic Policies</span>
+          <span class="pc-title">TraceVLA: Visual Trace Prompting Enhances Spatial-Temporal Awareness for Generalist Robotic Policies</span>
           <span class="pc-meta">Zheng et al. · arXiv:2412.10345</span>
         </a>
         <div class="post-body">
           <p>One of the biggest weaknesses of VLA models is long-horizon reasoning. Most VLA policies predict actions from the current observation alone:</p>
           <div class="pipeline">π(a<sub>t</sub> | image<sub>t</sub>, instruction)</div>
-          <p>This works surprisingly well for short manipulation tasks. But once the robot executes 20–100 steps, small errors compound and the policy drifts off distribution. TraceVLA asks a simple question: what if we gave the robot an explicit visual memory of its past trajectory? Instead of only the current frame, it provides two visual inputs — the current observation, and the same image with trajectory traces overlaid — encoding the robot's past state-action history directly in the visual domain. The pipeline:</p>
+          <p>This works surprisingly well for short manipulation tasks. But once the robot executes 20–100 steps, small errors compound and the policy drifts off distribution. TraceVLA asks a simple question: what if we gave the robot an explicit visual memory of its past trajectory? Instead of only the current frame, it provides two visual inputs (the current observation, and the same image with trajectory traces overlaid), encoding the robot's past state-action history directly in the visual domain. The pipeline:</p>
           <ul class="roles">
             <li><b>1</b> <span class="ar">→</span> track motion trajectories from past frames with a dense point tracker (CoTracker)</li>
             <li><b>2</b> <span class="ar">→</span> filter points with significant movement</li>
@@ -640,7 +640,7 @@
           </ul>
           <div class="pipeline">[Image tokens] → [Trace tokens] → [Language tokens] → Transformer → Action tokens</div>
           <p>This effectively converts temporal information into spatial structure, which transformers reason over much better. The result: <b>+10%</b> over OpenVLA in simulation, <b>3.5×</b> higher success on real-robot tasks, and strong generalization across embodiments.</p>
-          <p>The broader insight is what I find interesting: instead of scaling context windows or storing long histories, this compresses trajectory memory into a spatial representation — the robot doesn't need to remember the whole action sequence because it just sees the path it took. That feels especially relevant for long-horizon tasks like cloth folding, object rearrangement, multi-step assembly, and tool use. I ran into similar long-horizon issues working with policies trained from teleoperation data, so seeing this was exciting — a step toward giving VLA systems a more explicit notion of spatial-temporal memory.</p>
+          <p>The broader insight is what I find interesting: instead of scaling context windows or storing long histories, this compresses trajectory memory into a spatial representation: the robot doesn't need to remember the whole action sequence because it just sees the path it took. That feels especially relevant for long-horizon tasks like cloth folding, object rearrangement, multi-step assembly, and tool use. I ran into similar long-horizon issues working with policies trained from teleoperation data, so seeing this was exciting, a step toward giving VLA systems a more explicit notion of spatial-temporal memory.</p>
         </div>
       </div>
       </details>
@@ -660,8 +660,8 @@
           <p>A lot of robotics failures don't come from predicting the wrong action. They come from contacts, friction, and object dynamics making the control problem messy. Residual RL proposes a simple but useful hybrid: use classical control for what it's good at, and reinforcement learning for the leftover complexity. The reward decomposes as:</p>
           <div class="pipeline">r<sub>t</sub> = f(s<sub>robot</sub>) + g(s<sub>objects</sub>)</div>
           <ul class="roles">
-            <li><b>f(s<sub>robot</sub>)</b> <span class="ar">→</span> geometric objectives (trajectory tracking, positioning) — well handled by conventional feedback control</li>
-            <li><b>g(s<sub>objects</sub>)</b> <span class="ar">→</span> object interactions and contact dynamics — much harder to model, better learned</li>
+            <li><b>f(s<sub>robot</sub>)</b> <span class="ar">→</span> geometric objectives (trajectory tracking, positioning), well handled by conventional feedback control</li>
+            <li><b>g(s<sub>objects</sub>)</b> <span class="ar">→</span> object interactions and contact dynamics, much harder to model and better learned</li>
           </ul>
           <p>The key idea is an additive control policy:</p>
           <div class="pipeline">u = π<sub>H</sub>(s<sub>m</sub>) + π<sub>θ</sub>(s<sub>m</sub>, s<sub>o</sub>)</div>
@@ -669,8 +669,8 @@
             <li><b>π<sub>H</sub></b> <span class="ar">→</span> a hand-engineered controller (impedance or trajectory control)</li>
             <li><b>π<sub>θ</sub></b> <span class="ar">→</span> a learned residual that corrects for contacts, friction, and unmodeled dynamics</li>
           </ul>
-          <p>Instead of learning a controller from scratch, RL only learns the residual correction. Evaluated on a real-world task — inserting a block between two standing blocks without tipping them over — the results are striking: residual RL learns faster and performs better than RL alone in both sim and reality; on misaligned starts the hand-designed controller succeeds 2/20 while residual RL succeeds 15/20; it learns subtle corrections (nudging blocks into alignment) in ~8,000 samples (~3 hours of real interaction); and initialized from MuJoCo, it solves the task in under 1,000 real-world timesteps.</p>
-          <p>My takeaway: structure from classical control plus adaptability from RL is a very clean way to tackle contact-rich manipulation — let RL focus on the parts that are hardest to model, instead of rediscovering everything. I keep thinking about this in modern VLA systems: should robustness come from residual policies, or from fine-tuning the full foundation model?</p>
+          <p>Instead of learning a controller from scratch, RL only learns the residual correction. Evaluated on a real-world task (inserting a block between two standing blocks without tipping them over), the results are striking: residual RL learns faster and performs better than RL alone in both sim and reality; on misaligned starts the hand-designed controller succeeds 2/20 while residual RL succeeds 15/20; it learns subtle corrections (nudging blocks into alignment) in ~8,000 samples (~3 hours of real interaction); and initialized from MuJoCo, it solves the task in under 1,000 real-world timesteps.</p>
+          <p>My takeaway: structure from classical control plus adaptability from RL is a very clean way to tackle contact-rich manipulation: let RL focus on the parts that are hardest to model, instead of rediscovering everything. I keep thinking about this in modern VLA systems: should robustness come from residual policies, or from fine-tuning the full foundation model?</p>
         </div>
       </div>
       </details>
@@ -683,16 +683,16 @@
         <div class="post-inner">
         <a class="paper-card" href="https://arxiv.org/abs/2502.05450" target="_blank" rel="noopener">
           <span class="pc-label">Paper</span>
-          <span class="pc-title">ConRFT — A Reinforced Fine-tuning Method for VLA Models via Consistency Policy</span>
+          <span class="pc-title">ConRFT: A Reinforced Fine-tuning Method for VLA Models via Consistency Policy</span>
           <span class="pc-meta">Chen, Tian, Liu, Zhou, Li, Zhao · arXiv:2502.05450</span>
         </a>
         <div class="post-body">
-          <p>One of the biggest weaknesses of imitation-trained VLA models is distribution shift during rollout. Behavior cloning optimizes action prediction on expert states, but once deployed the robot visits states induced by its own policy — and small prediction errors compound quickly. (As I was preparing for my role at AXIBO, I started digging deeper into VLA systems: action heads, value integration, online adaptation, embodiment constraints.) ConRFT proposes a two-stage reinforced fine-tuning pipeline aimed at exactly this problem.</p>
-          <p><b>Stage 1 — Cal-ConRFT (offline).</b> Calibrated Q-learning for conservative value estimates, augmented with a behavior-cloning loss under a unified objective:</p>
+          <p>One of the biggest weaknesses of imitation-trained VLA models is distribution shift during rollout. Behavior cloning optimizes action prediction on expert states, but once deployed the robot visits states induced by its own policy, and small prediction errors compound quickly. (As I was preparing for my role at AXIBO, I started digging deeper into VLA systems: action heads, value integration, online adaptation, embodiment constraints.) ConRFT proposes a two-stage reinforced fine-tuning pipeline aimed at exactly this problem.</p>
+          <p><b>Stage 1: Cal-ConRFT (offline).</b> Calibrated Q-learning for conservative value estimates, augmented with a behavior-cloning loss under a unified objective:</p>
           <div class="pipeline">L<sub>π</sub> = β · L<sub>BC</sub> + η · L<sub>Q</sub></div>
-          <p>Trained on only 20–30 demonstrations, so the BC term is needed to stabilize — the hybrid objective improves expected return while staying close to demonstrated behavior.</p>
-          <p><b>Stage 2 — HIL-ConRFT (online).</b> Same unified loss, symmetric sampling from demo and replay buffers, and human-in-the-loop interventions for safe exploration, gradually shifting weight from BC (β) toward Q-learning (η). One detail I liked: instead of a diffusion action head, ConRFT uses a lightweight consistency policy head (diffusion horizon discretized into M = 40 steps, a 2-layer MLP) — efficient inference with value-guided refinement.</p>
-          <p>Across 8 real-world tasks it reaches <b>96.3%</b> average success within 45–90 minutes of online training — a 144% improvement over the supervised baseline with 1.9× shorter episodes (the baseline reached only 31.9% in the same budget). The takeaway: imitation provides a strong prior, but without value-based refinement, policies struggle under their own induced state distribution. ConRFT reframes VLA fine-tuning as consistency-based policy learning guided by Q-estimates and stabilized by behavior cloning.</p>
+          <p>Trained on only 20–30 demonstrations, so the BC term is needed to stabilize; the hybrid objective improves expected return while staying close to demonstrated behavior.</p>
+          <p><b>Stage 2: HIL-ConRFT (online).</b> Same unified loss, symmetric sampling from demo and replay buffers, and human-in-the-loop interventions for safe exploration, gradually shifting weight from BC (β) toward Q-learning (η). One detail I liked: instead of a diffusion action head, ConRFT uses a lightweight consistency policy head (diffusion horizon discretized into M = 40 steps, a 2-layer MLP), giving efficient inference with value-guided refinement.</p>
+          <p>Across 8 real-world tasks it reaches <b>96.3%</b> average success within 45–90 minutes of online training, a 144% improvement over the supervised baseline with 1.9× shorter episodes (the baseline reached only 31.9% in the same budget). The takeaway: imitation provides a strong prior, but without value-based refinement, policies struggle under their own induced state distribution. ConRFT reframes VLA fine-tuning as consistency-based policy learning guided by Q-estimates and stabilized by behavior cloning.</p>
         </div>
       </div>
       </details>

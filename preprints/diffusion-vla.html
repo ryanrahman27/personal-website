@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diffusion-Trained Backbones for Flow-Matching VLA Policies — Research Proposal · Ryan Rahman</title>
+<meta name="description" content="A controlled study of diffusion-trained multimodal backbones for action-token representations in flow-matching Vision-Language-Action policies, by Ryan Rahman.">
+<style>:root{color-scheme:light}html,body{margin:0}body{background:#ffffff;color:#1a1c22}img{max-width:100%}
+.backbar{max-width:44rem;margin:0 auto;padding:1.1rem 1.5rem 0;font:600 .8rem/1 ui-monospace,Consolas,monospace;letter-spacing:.04em;text-transform:uppercase}
+.backbar a{color:#b11226;text-decoration:none}.backbar a:hover{text-decoration:underline}</style>
+<style>
+  /* Plain professional preprint — mirrors the LaTeX PDF: white paper, serif type,
+     crimson used only for the eyebrow and links. Deliberately single (light) theme,
+     like a printed document. */
+  :root{
+    --paper:#ffffff; --ink:#1a1c22; --muted:#4b5563; --rule:#d1d5db;
+    --accent:#b11226; --boxbg:#f7f7f8; --boxline:#d1d5db;
+    --serif:"Latin Modern Roman",Georgia,"Times New Roman","Nimbus Roman",Times,serif;
+    --mono:"Latin Modern Mono","Cascadia Code",Consolas,ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--paper);color:var(--ink);margin:0;
+    font-family:var(--serif);font-size:17px;line-height:1.52;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:44rem;margin:0 auto;padding:3.5rem 1.5rem 5rem;}
+
+  /* masthead */
+  .masthead{text-align:center;margin-bottom:1.6rem;}
+  .eyebrow{font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:.9rem;}
+  h1.title{font-weight:700;font-size:1.95rem;line-height:1.2;margin:0 auto .6rem;
+    max-width:36rem;text-wrap:balance;}
+  .subtitle{font-size:1.02rem;color:var(--muted);margin:.3rem auto 1.1rem;max-width:34rem;line-height:1.4;}
+  .rule{width:70%;margin:1.1rem auto;border:0;border-top:.5px solid var(--rule);}
+  .byline{font-size:.98rem;}
+  .byline .name{font-weight:700;}
+  .byline .aff,.byline .date{color:var(--muted);font-size:.9rem;}
+  .byline .aff{display:block;margin-top:.15rem;}
+  .byline .date{display:block;margin-top:.05rem;}
+
+  /* callout box == \proposalbox */
+  .box{background:var(--boxbg);border:1px solid var(--boxline);border-radius:2px;
+    padding:.85rem 1.05rem;margin:1.5rem 0;font-size:.97rem;line-height:1.5;}
+  .box .lead{font-weight:700;}
+
+  /* contents */
+  .toc{margin:1.6rem 0 2.2rem;}
+  .toc .h{font-weight:700;font-size:1.05rem;margin-bottom:.4rem;}
+  .toc ol{margin:0;padding-left:1.6rem;columns:2;column-gap:2rem;font-size:.92rem;}
+  .toc li{margin:.12rem 0;}
+  .toc a{color:var(--ink);text-decoration:none;}
+  .toc a:hover{color:var(--accent);}
+
+  /* sections */
+  h2{font-weight:700;font-size:1.3rem;margin:2.2rem 0 .5rem;line-height:1.25;text-wrap:balance;}
+  h2 .num{margin-right:.6rem;}
+  h3{font-weight:700;font-size:1.04rem;margin:1.35rem 0 .25rem;}
+  h3 .num{margin-right:.5rem;color:var(--muted);font-weight:400;}
+  p{margin:.6rem 0;text-align:justify;hyphens:auto;}
+  .runin{font-weight:700;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  ul,ol.body-list{margin:.6rem 0;padding-left:1.4rem;}
+  li{margin:.28rem 0;}
+  code,.mono{font-family:var(--mono);font-size:.85em;}
+  var{font-style:italic;}
+
+  /* equations */
+  .eq{display:flex;align-items:center;gap:1rem;margin:1rem 0;overflow-x:auto;}
+  .eq .body{flex:1;text-align:center;white-space:nowrap;font-size:1.02rem;}
+  .eq .n{flex:none;color:var(--ink);font-size:.95rem;}
+  .op{color:var(--muted);}
+
+  /* figure */
+  figure{margin:1.8rem 0;text-align:center;}
+  .figbox{overflow-x:auto;padding:.4rem 0;}
+  figcaption{font-size:.86rem;line-height:1.45;color:var(--muted);margin-top:.7rem;
+    text-align:left;max-width:40rem;margin-left:auto;margin-right:auto;}
+  figcaption b{color:var(--ink);font-weight:700;}
+
+  /* tables (booktabs) */
+  .tablewrap{overflow-x:auto;margin:1.3rem 0;}
+  table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:34rem;line-height:1.4;}
+  caption{caption-side:top;text-align:left;font-size:.86rem;color:var(--muted);margin-bottom:.5rem;}
+  caption b{color:var(--ink);}
+  thead th{text-align:left;font-weight:700;padding:.45rem .7rem;
+    border-top:1.5px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom;}
+  tbody td{padding:.5rem .7rem;vertical-align:top;}
+  tbody tr:last-child td{border-bottom:1.5px solid var(--ink);}
+  tbody td:first-child{font-weight:700;white-space:nowrap;}
+  .deferred td{color:var(--muted);border-top:1px solid var(--rule);}
+
+  /* references */
+  ol.refs{font-size:.86rem;line-height:1.45;counter-reset:ref;list-style:none;padding-left:0;margin-top:.6rem;}
+  ol.refs li{counter-increment:ref;position:relative;padding-left:2.3rem;margin:.35rem 0;text-align:left;}
+  ol.refs li::before{content:"["counter(ref)"]";position:absolute;left:0;color:var(--ink);}
+  ol.refs .t{font-style:italic;}
+
+  .foot{margin-top:2.8rem;padding-top:.9rem;border-top:.5px solid var(--rule);
+    font-size:.8rem;color:var(--muted);text-align:center;}
+
+  @media (max-width:640px){
+    body{font-size:16px;}
+    h1.title{font-size:1.6rem;}
+    .toc ol{columns:1;}
+    .wrap{padding:2.5rem 1.1rem 3.5rem;}
+  }
+</style>
+</head>
+<body>
+<div class="backbar"><a href="../index.html">&larr; Ryan Rahman</a></div>
+<article class="wrap">
+  <div class="masthead">
+    <div class="eyebrow">Research Proposal</div>
+    <h1 class="title">Diffusion-Trained Multimodal Backbones for Action-Token Representations in Flow-Matching Vision-Language-Action Policies</h1>
+    <div class="subtitle">A controlled study of backbone generative prior, bidirectional action-token context, and continuous robot action generation.</div>
+    <hr class="rule" />
+    <div class="byline">
+      <span class="name">Ryan Rahman</span>
+      <span class="aff">University of Waterloo — Mechatronics Engineering / Robotics Research</span>
+      <span class="date">Preprint · living document</span>
+    </div>
+  </div>
+
+  <div class="box"><span class="lead">Central question.</span> Does a diffusion-trained bidirectional multimodal backbone produce better action-token hidden states than a causal/autoregressive VLM backbone when both are paired with the same flow-matching action expert?</div>
+
+  <nav class="toc">
+    <div class="h">Contents</div>
+    <ol>
+      <li><a href="#s1">Abstract</a></li>
+      <li><a href="#s2">Motivation</a></li>
+      <li><a href="#s3">Background &amp; Prior Evidence</a></li>
+      <li><a href="#s4">Research Question &amp; Hypothesis</a></li>
+      <li><a href="#s5">Proposed Method</a></li>
+      <li><a href="#s6">Model Variants</a></li>
+      <li><a href="#s7">Why This Is Not Redundant</a></li>
+      <li><a href="#s8">Experimental Task Suite</a></li>
+      <li><a href="#s9">Evaluation Metrics</a></li>
+      <li><a href="#s10">Training Plan</a></li>
+      <li><a href="#s11">Compute &amp; Timeline</a></li>
+      <li><a href="#s12">Expected Results</a></li>
+      <li><a href="#s13">Risks &amp; Mitigations</a></li>
+      <li><a href="#s14">Expected Contributions</a></li>
+      <li><a href="#s15">Minimal Viable Study</a></li>
+      <li><a href="#s16">Final Positioning</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="s1"><span class="num">1</span>Abstract</h2>
+  <p>Vision-Language-Action (VLA) models have emerged as a promising framework for generalist robot control by pairing pretrained vision-language representations with continuous action-generation modules. Recent systems such as <span class="mono">π0</span> and <span class="mono">π0.5</span> demonstrate that pretrained VLM-style backbones can be adapted to robotic manipulation through robotics-specific state/action tokens and flow-matching action experts for continuous action chunks [2,3]. However, many current VLA backbones inherit a causal autoregressive language-model prior, where sequence processing is shaped by next-token prediction.</p>
+  <p>Robot action chunks are not naturally left-to-right text sequences. A future action trajectory is a structured block in which early approach actions, future contact timing, multi-stage subtask ordering, grasp closure, and stabilization are jointly coupled. This proposal investigates whether a diffusion-trained bidirectional multimodal backbone can produce better action-token hidden states than a causal/autoregressive VLM backbone when both use the same flow-matching action expert.</p>
+  <p>The proposed study isolates the backbone as the key variable while keeping the action representation, flow objective, action head, dataset, task suite, and control stack fixed. Evaluation is carried out entirely in simulation on the LIBERO benchmark, which enables fair, reproducible, high-<var>n</var> comparison, removes real-robot calibration and latency confounds, provides ground-truth state for representation probing, and is directly comparable to published diffusion-VLA results. The core hypothesis is that diffusion-style block refinement and bidirectional token context will yield hidden states that better encode trajectory phase, subtask ordering, and corrective structure for flow-matching robot control.</p>
+
+  <h2 id="s2"><span class="num">2</span>Motivation</h2>
+  <p>Current VLA models are built around a powerful idea: use large-scale vision-language pretraining to obtain semantic and perceptual grounding, then adapt the model to continuous robot control. In the <span class="mono">π0</span> family this is achieved by integrating robot state/action inputs into a VLM and using conditional flow matching to generate continuous action chunks [2]. <span class="mono">π0.5</span> further extends this direction with open-world generalization and a flow-matching action expert that operates on action tokens representing partially denoised robot actions [3,4].</p>
+  <p>This design raises a deeper architectural question, and it is important to be precise about <em>which</em> part of the model is causal. In the OpenPI implementation of <span class="mono">π0.5</span>, the attention mask is block-wise rather than strictly left-to-right: the image/language prefix attends bidirectionally within itself, and the action chunk forms a single bidirectional block whose tokens all attend to one another. Causality survives only <em>across</em> blocks (prefix &rarr; state &rarr; action), so the backbone behaves as a prefix-LM at inference time, not as a token-level autoregressive decoder. What remains autoregressive is therefore not the action-token attention mask but the <em>pretraining prior</em>: the weights were trained under a next-token objective that shapes how the model organizes and refines sequences. This proposal asks whether that pretraining prior &mdash; rather than the inference-time mask, which is already bidirectional over the action block &mdash; limits the quality of action-token hidden states, and whether a backbone pretrained around block-level refinement would organize them better.</p>
+  <p>Diffusion-trained language and multimodal models provide a useful alternative. DiffusionGemma, for example, is a Google DeepMind model based on a Gemma 4 Mixture-of-Experts architecture that generates tokens using discrete diffusion rather than standard autoregressive decoding [5,6]. Rather than emitting text strictly token by token, a diffusion language model refines corrupted token blocks over multiple steps. This motivates a robotics hypothesis: action chunks may benefit from hidden states produced by a backbone trained around bidirectional block refinement, even if the final action decoder remains a continuous flow-matching module.</p>
+  <div class="box"><span class="lead">Thesis.</span> For flow-matching VLA policies, the generative pretraining prior of the multimodal backbone may influence the quality of action-token representations. A diffusion-trained bidirectional backbone may better support action chunks than a causal/autoregressive backbone because robot trajectories are naturally block-structured.</div>
+
+  <h2 id="s3"><span class="num">3</span>Background and Prior Evidence</h2>
+  <h3><span class="num">3.1</span>Flow and diffusion policies for robot action generation</h3>
+  <p>Diffusion Policy introduced a visuomotor policy formulation in which robot behavior is generated through a conditional denoising diffusion process over action space [14]. The method showed strong performance across manipulation benchmarks and emphasized several advantages relevant to this proposal: handling multimodal action distributions, supporting high-dimensional action spaces, using receding-horizon control, and incorporating a time-series diffusion transformer. Subsequent work such as 3D Diffusion Policy extends this formulation to compact 3D scene representations [9], indicating that the diffusion-policy approach generalizes across observation modalities. The important lesson is that robot action generation is often better treated as iterative trajectory refinement than as one-step regression.</p>
+  <h3><span class="num">3.2</span>VLM backbones with flow-matching action experts</h3>
+  <p>The <span class="mono">π0</span> model adapts a pretrained VLM for robot control by adding robotics-specific inputs and outputs and using conditional flow matching to model continuous actions [2]. <span class="mono">π0.5</span> builds on this architecture and uses co-training, semantic subtask prediction, and multiple data sources to enable broader generalization [3]. The open-source OpenPI implementation supports the flow-matching head for <span class="mono">π0.5</span> training and inference [4]. This validates the architectural pattern used here: multimodal tokens &rarr; multimodal backbone &rarr; action-token hidden states &rarr; flow-matching action expert &rarr; continuous action chunk. The proposed research does not replace flow matching; it asks whether the backbone that feeds the flow expert should be diffusion-trained and bidirectional rather than causal/autoregressive.</p>
+  <h3><span class="num">3.3</span>Diffusion-trained multimodal backbones</h3>
+  <p>DiffusionGemma is an experimental open model built by Google DeepMind using discrete diffusion over tokens, based on the Gemma 4 26B / 4B-active Mixture-of-Experts architecture [5]. The model card reports 25.2B total parameters, 3.8B active parameters, 30 layers, text and image support, a 256-token canvas, and a 256K-token context length [6]. For robotics, the key point is not that DiffusionGemma should directly output actions through its native text head; the relevant point is that diffusion pretraining encourages a different representation prior &mdash; corrupted blocks are refined into coherent outputs using bidirectional context. We flag that this is an analogy, not established transfer: whether a block-refinement prior learned over language and image tokens transfers to the structure of robot action chunks is precisely the empirical question this proposal tests, and the design is built so that a null transfer result is itself informative (§12).</p>
+  <h3><span class="num">3.4</span>Representation quality matters for diffusion policies</h3>
+  <p>Crossway Diffusion improves diffusion-based visuomotor policies by adding self-supervised representation learning objectives, including reconstructing visual and state information from intermediate representations of the reverse diffusion process [7]. This supports the claim that diffusion-policy performance depends not only on the denoising loss but on the quality and structure of intermediate representations. This proposal extends the idea to VLA backbones: instead of only changing the action denoising module, it investigates whether the multimodal backbone can produce action-token hidden states that better organize task-relevant information.</p>
+  <h3><span class="num">3.5</span>Action-token structure is now central to VLA design</h3>
+  <p>Recent VLA work increasingly treats action tokens as a core interface between perception-language context and executable control. Ordered Action Tokens identifies desiderata for action tokenization and validates action tokens in both autoregressive control and token co-training settings where token losses shape the VLM context consumed by a flow-based action expert [8]. This directly supports the proposed focus on action-token hidden states as a meaningful research object rather than an implementation detail.</p>
+  <h3><span class="num">3.6</span>Diffusion vision-language-action models (closest prior work)</h3>
+  <p>A cluster of concurrent work already couples diffusion-trained multimodal backbones with robot control. Dream-VLA builds a VLA directly on the diffusion VLM Dream-VL (Qwen2ViT vision encoder + Dream-7B backbone) and reports strong results (e.g. 97.2% average on LIBERO), pretraining on Open X-Embodiment with a discrete-diffusion loss and optionally switching to continuous losses such as flow matching or L1 during downstream fine-tuning [13]. Related efforts include LLaDA-VLA [15] and Discrete Diffusion VLA [16], which bring discrete diffusion to action decoding.</p>
+  <p>The critical architectural distinction is that these systems fold action generation <em>into</em> the unified diffusion backbone &mdash; there is no separate action expert. This proposal makes the opposite choice on purpose: it keeps a <em>separate, fixed</em> flow-matching action expert in the <span class="mono">π0.5</span> style and swaps only the backbone. That separation is what makes the controlled comparison possible. Concretely, this proposal differs in three ways:</p>
+  <ol class="body-list">
+    <li><span class="runin">Controlled isolation.</span> Dream-VLA shows a diffusion VLA <em>works</em> but does not isolate <em>why</em> &mdash; it has no scale/architecture-matched AR control, so its gains cannot be attributed to the diffusion prior rather than scale, data, or the action-decoding change. The <span class="mono">C&minus;D</span> (Dream-7B vs. Qwen2.5-7B) contrast is designed precisely to answer that.</li>
+    <li><span class="runin">Fixed action mechanism.</span> Holding a single flow-matching expert fixed across all backbones attributes differences to the backbone's <em>representations</em>, not to a change in how actions are decoded.</li>
+    <li><span class="runin">Representation probing.</span> This proposal probes action-token hidden states directly (§9.2), which the outcome-only evaluations of existing diffusion VLAs do not.</li>
+  </ol>
+  <p>In short, the diffusion-VLA cluster establishes feasibility and strong headline numbers; this proposal supplies the controlled, representation-level explanation those results leave open.</p>
+
+  <h2 id="s4"><span class="num">4</span>Research Question and Hypothesis</h2>
+  <div class="box"><span class="lead">Research question.</span> Does a diffusion-trained bidirectional multimodal backbone produce better action-token hidden states than a causal/autoregressive VLM backbone when both use the same flow-matching action expert?</div>
+  <p>The hypothesis is that a diffusion-trained bidirectional backbone will outperform a causal/autoregressive backbone when paired with the same flow-matching expert, especially on LIBERO tasks requiring spatial reasoning, instruction/goal grounding, and long-horizon multi-stage execution. More specifically, the diffusion-trained backbone is expected to produce action-token hidden states that better encode trajectory phase and subtask ordering, future contact timing, target-object identity and spatial relations, goal/instruction grounding, corrective motion structure, and final action-chunk success. The expected advantage is strongest on LIBERO-Long and in low-data regimes, and weaker on the shorter LIBERO-Spatial/Object/Goal suites, where near-ceiling success rates can compress differences.</p>
+
+  <h2 id="s5"><span class="num">5</span>Proposed Method</h2>
+  <h3><span class="num">5.1</span>System overview</h3>
+  <p>The architecture follows a <span class="mono">π0.5</span>-style integration pattern. The model receives image, language, proprioceptive, flow-time, and noisy action tokens; the backbone processes the multimodal token sequence, and the hidden states at the action-token positions are passed into a shared flow-matching action expert. For the LIBERO single-arm end-effector policy the future action chunk is</p>
+  <div class="eq"><div class="body"><var>A</var><sub>clean</sub> = [<var>a</var><sub>t</sub>, <var>a</var><sub>t+1</sub>, &hellip;, <var>a</var><sub>t+H&minus;1</sub>] &isin; &#8477;<sup>H&times;D</sup>,</div><div class="n">(1)</div></div>
+  <p>where <var>H</var> is the action horizon and <var>D</var> the action dimension. LIBERO uses a 7-DoF end-effector action space:</p>
+  <div class="eq"><div class="body"><var>D</var> = [ &Delta;<var>x</var>, &Delta;<var>y</var>, &Delta;<var>z</var>, &Delta;<var>r</var>, &Delta;<var>p</var>, &Delta;<var>&psi;</var>, <var>g</var> ].</div><div class="n">(2)</div></div>
+  <p>The design is action-dimension agnostic; the same pipeline extends to higher-dimensional (e.g. bimanual) action spaces without changing the backbone comparison. Each noisy action vector is projected into the model hidden dimension, and the full token sequence is [image tokens, language tokens, proprio tokens, flow-time token, action<sub>1</sub>, &hellip;, action<sub>H</sub>]. The backbone outputs hidden states <var>H</var><sub>action</sub> &isin; &#8477;<sup>H&times;d</sup> at the action-token positions, which the expert maps to a vector field <var>v</var><sub>pred</sub> = <var>f</var><sub>expert</sub>(<var>H</var><sub>action</sub>) &isin; &#8477;<sup>H&times;D</sup>.</p>
+  <h3><span class="num">5.2</span>Reading hidden states from a diffusion-trained backbone</h3>
+  <p>For an autoregressive or prefix-LM backbone, <var>H</var><sub>action</sub> is produced by a single forward pass. A discrete-diffusion backbone does not share this property: its hidden states are a function of the corruption level (mask ratio) and the number of refinement steps, so "the" action-token hidden state is really a family indexed by diffusion time. This choice must be fixed <em>before</em> any comparison and reported explicitly. We adopt the following convention as a controlled hyperparameter: for the diffusion backbone (Model C), the noisy action tokens are placed on the diffusion canvas and the backbone is run for a fixed, pre-registered number of refinement steps <var>k</var>; the hidden states read into the expert are taken from the final refinement step. We ablate <var>k</var> &isin; {1, 2, 4} so that <var>k</var>=1 (a single forward pass) is directly compute-comparable to the AR/prefix-LM backbones, isolating the effect of the <em>prior</em> from extra test-time computation. The flow-time conditioning <var>s</var> is kept separate from the backbone's internal diffusion step.</p>
+  <h3><span class="num">5.3</span>Flow-matching objective</h3>
+  <p>Given a clean action chunk <var>A</var><sub>clean</sub> from demonstration data, sample Gaussian noise <var>A</var><sub>noise</sub> &sim; <var>N</var>(0, I) and a flow time <var>s</var> &sim; Uniform(0, 1). Construct the interpolated noisy chunk and target field:</p>
+  <div class="eq"><div class="body"><var>A</var><sub>s</sub> = (1&minus;<var>s</var>)<var>A</var><sub>noise</sub> + <var>s</var> <var>A</var><sub>clean</sub>, &nbsp;&nbsp; <var>v</var><sub>target</sub> = <var>A</var><sub>clean</sub> &minus; <var>A</var><sub>noise</sub>.</div><div class="n">(3)</div></div>
+  <p>The model predicts <var>v</var><sub>pred</sub> = <var>f</var><sub>&theta;</sub>(images, language, proprio, <var>A</var><sub>s</sub>, <var>s</var>) and is trained with</p>
+  <div class="eq"><div class="body">&#8466;<sub>flow</sub> = &Vert; <var>v</var><sub>pred</sub> &minus; <var>v</var><sub>target</sub> &Vert;<sub>2</sub><sup>2</sup>.</div><div class="n">(4)</div></div>
+  <p>At inference the policy starts from random noise and repeatedly applies the predicted vector field to refine the action chunk; the first few actions are executed, then the robot re-observes and replans in a receding-horizon loop.</p>
+  <h3><span class="num">5.4</span>Backbone selection and feasibility</h3>
+  <p>Backbones are chosen so the identifying contrast is clean, the models fit available hardware, and all components are openly licensed with released <em>training</em> code. The primary study uses the Dream-7B / Qwen2.5-7B pair at ~7B parameters; DiffusionGemma is retained only as an optional large-scale confirmation.</p>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 1.</b> Backbone components: role, scale, and licensing. All are Apache-2.0 with open weights and released training code.</caption>
+      <thead><tr><th>Component</th><th>Role</th><th>Scale</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Qwen2.5-7B</td><td>Model D (AR base)</td><td>7B dense</td><td>Base model that Dream-7B is initialized from; open weights + code.</td></tr>
+        <tr><td>Dream-7B</td><td>Model C (diffusion)</td><td>7B dense</td><td>Discrete-diffusion LM initialized from Qwen2.5-7B; fine-tuning code released.</td></tr>
+        <tr><td>Dream-VL / LaViDa</td><td>Multimodal recipe</td><td>7&ndash;8B</td><td>Vision encoder (Qwen2ViT / SigLIP-400M) + connector; stage-1/2 scripts released.</td></tr>
+        <tr><td>DiffusionGemma</td><td>Model C-large (optional)</td><td>26B / 3.8B-active MoE</td><td>Larger, independently-trained diffusion backbone; encoder-decoder MoE, heavier integration.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><span class="runin">Feasibility.</span> At ~7B parameters the primary models fit comfortably on a multi-A100 (80 GB) setup. Full fine-tuning of a 7B backbone plus the action expert is tractable with FSDP; LoRA is the default to preserve the pretraining difference between C and D. At the <var>k</var>=1 hidden-state setting the diffusion backbone costs one forward pass, matching the AR backbone for latency parity. The optional DiffusionGemma run is heavier (26B weights, ~52 GB bf16, plus encoder-decoder MoE), which is why it is scoped as a confirmation run.</p>
+
+  <h2 id="s6"><span class="num">6</span>Model Variants</h2>
+  <p>The study keeps the action expert, action space, flow objective, dataset, and control stack fixed while varying the backbone and its attention topology. Dream-7B, a discrete-diffusion LM, is <em>initialized from Qwen2.5-7B</em> and trained with a diffusion objective; using Dream-7B for the diffusion arm and Qwen2.5-7B for the AR arm holds parameters, architecture, and initialization fixed, so the dominant remaining difference is the training objective itself.</p>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 2.</b> Controlled model comparison. The action expert, action space, flow objective, dataset, and control stack are identical across all rows.</caption>
+      <thead><tr><th>Model</th><th>Backbone</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>Stock <span class="mono">π0.5</span> prefix-LM backbone (AR-pretrained Gemma; prefix bidirectional, action block bidirectional, block-causal across segments) + shared flow expert</td><td>Honest reference baseline. This <em>is</em> the OpenPI <span class="mono">π0.5</span> attention structure, not a strictly causal model.</td></tr>
+        <tr><td>D</td><td>AR backbone: Qwen2.5-7B (the base Dream-7B is initialized from), same multimodal recipe + shared flow expert</td><td>Matched AR control. Same parameter count, architecture, and initialization as C; differs in training objective.</td></tr>
+        <tr><td>C</td><td>Diffusion backbone: Dream-7B (discrete-diffusion, initialized from Qwen2.5-7B), same recipe + shared flow expert</td><td>Main proposed model. <span class="mono">C&minus;D</span> isolates the diffusion pretraining prior at matched scale/architecture.</td></tr>
+        <tr><td>B</td><td>Model D's backbone with expanded attention topology (prefix and action tokens mutually bidirectional, remaining block-causal boundaries removed) + shared flow expert</td><td>Isolates the effect of <em>attention-mask topology</em> given identical pretraining.</td></tr>
+        <tr><td>C-large</td><td>Optional: DiffusionGemma (26B/3.8B-active MoE) + shared flow expert, with Gemma 4 26B-A4B as its matched AR control</td><td>Scale-generalization check only; run and reported separately if integration budget allows.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The comparisons isolate: <span class="mono">C&minus;D</span> &mdash; the diffusion pretraining prior at matched scale/architecture; <span class="mono">B&minus;D</span> &mdash; attention-mask topology (pretraining held fixed); <span class="mono">C&minus;A</span> &mdash; the total effect of the proposed backbone vs. the deployed <span class="mono">π0.5</span> baseline. The identifying claim rests on <span class="mono">C&minus;D</span>. Because Dream-7B and Qwen2.5-7B share initialization and architecture and differ chiefly in objective, this is close to the ideal "same base, two objectives" comparison, obtained without training a diffusion model from scratch. We do <em>not</em> claim any single contrast is perfectly clean; the set brackets the effect and makes the remaining confounds explicit.</p>
+
+  <h2 id="s7"><span class="num">7</span>Why This Is Not Redundant</h2>
+  <p>The proposed architecture does not run two independent denoising processes. The diffusion-trained backbone is used as a multimodal representation processor; the continuous flow-matching action expert remains the only component responsible for denoising robot action chunks. The system is a <strong>diffusion-trained multimodal backbone + continuous flow-matching action expert</strong> &mdash; not a discrete text-diffusion action decoder stacked on a separate continuous action-flow decoder. It is also distinct from unified diffusion VLAs such as Dream-VLA (§3.6), which decode actions <em>inside</em> the backbone with no separate expert. Keeping the flow-matching expert fixed and external is the mechanism that makes the backbone the sole controlled variable.</p>
+
+  <h2 id="s8"><span class="num">8</span>Experimental Task Suite</h2>
+  <p>Evaluation is performed entirely in simulation on the LIBERO benchmark [17], a standard single-arm (Franka Panda) manipulation suite. LIBERO is chosen for fairness and comparability: fixed task definitions and deterministic resets, large numbers of rollouts at negligible cost, ground-truth simulator state for representation probing, and it is the benchmark on which the closest prior work (Dream-VLA, OpenVLA-OFT, GR00T) reports results, enabling an apples-to-apples comparison. The study uses the four standard suites, each isolating a different generalization axis:</p>
+  <ol class="body-list">
+    <li><span class="runin">LIBERO-Spatial.</span> Same objects, varied spatial arrangements; isolates spatial reasoning and target disambiguation.</li>
+    <li><span class="runin">LIBERO-Object.</span> Same layout, varied objects; isolates object identity grounding.</li>
+    <li><span class="runin">LIBERO-Goal.</span> Same objects and layout, varied goals/instructions; isolates instruction/goal grounding.</li>
+    <li><span class="runin">LIBERO-Long (LIBERO-10).</span> Long-horizon, multi-stage tasks; isolates trajectory-phase and subtask-ordering structure, where the block-refinement hypothesis is expected to matter most.</li>
+  </ol>
+  <p>Because published diffusion-VLA success rates on the shorter suites are near ceiling, LIBERO-Long and low-data (few-shot) variants are the primary discriminating conditions, complemented by continuous and representation-level metrics that do not saturate.</p>
+
+  <h2 id="s9"><span class="num">9</span>Evaluation Metrics</h2>
+  <h3><span class="num">9.1</span>Policy-level metrics</h3>
+  <p>Primary rollout metrics include per-suite and average task success rate, LIBERO-Long success specifically, few-shot success under reduced demonstration budgets, final end-effector pose error, target-object placement error, contact-timing error (from simulator contact events), action smoothness and jerk, and inference latency at the chosen <var>k</var>. Because effect sizes may be modest, all headline comparisons report Wilson confidence intervals for success rates and bootstrap intervals for continuous metrics, with significance assessed by paired tests over the shared, deterministic initial-condition set (e.g. 50 episodes &times; 10 tasks = 500 rollouts per suite, &ge;3 training seeds per model). Continuous metrics are emphasized because they are more sample-efficient than binary success and can reveal differences before success rates separate.</p>
+  <h3><span class="num">9.2</span>Representation-level metrics</h3>
+  <p>The core scientific contribution is representation analysis. For each trained model, hidden states at the action-token positions are extracted and lightweight probes are trained to predict task-relevant quantities against simulator ground truth: final end-effector pose, contact timestep, distance to contact, grasp success/failure, subtask phase/stage index, target-object pose and identity, spatial relation to the goal region, and whether the action chunk will succeed. If the diffusion-trained backbone produces hidden states more predictive of these quantities, it supports the hypothesis that the backbone learns better action-token representations.</p>
+  <p><span class="runin">Probe fairness.</span> Linear-probe predictivity scales with hidden dimensionality and pretraining scale, so probes are controlled for capacity: hidden states are projected to a common dimensionality (or compared under a matched probe parameter budget), probe hyperparameters and training data are identical across backbones, and performance is reported against a shared held-out split. The most informative probe comparison is again <span class="mono">C</span> vs. <span class="mono">D</span>; <span class="mono">C</span> vs. <span class="mono">A</span> gaps are reported only alongside the dimensionality caveat.</p>
+
+  <h2 id="s10"><span class="num">10</span>Training Plan</h2>
+  <ol class="body-list">
+    <li><span class="runin">Stage 1 &mdash; Baseline reproduction.</span> Fine-tune the stock <span class="mono">π0.5</span> prefix-LM baseline (Model A) with the flow expert on LIBERO via OpenPI, reproducing published <span class="mono">π0</span>/<span class="mono">π0.5</span>-class numbers before any backbone changes.</li>
+    <li><span class="runin">Stage 2 &mdash; Backbone swap.</span> Replace the backbone with Dream-7B (Model C) under the shared recipe, keeping the expert, action space, flow objective, and control stack unchanged.</li>
+    <li><span class="runin">Stage 3 &mdash; Attention-topology ablation (Model B).</span> Starting from Model D's AR backbone, expand the topology so prefix and action tokens attend mutually. Building B on D holds pretraining fixed so <span class="mono">B&minus;D</span> isolates topology alone; a near-null result is a legitimate finding that the mask is not the bottleneck.</li>
+    <li><span class="runin">Stage 4 &mdash; Scale/architecture-matched control (Model D).</span> Train Qwen2.5-7B under the same recipe and expert as C. Because Dream-7B is initialized from Qwen2.5-7B, this is close to the ideal "same base, two objectives" comparison. The identifying contrast <span class="mono">C&minus;D</span> is computed here.</li>
+    <li><span class="runin">Stage 5 &mdash; LoRA or partial fine-tuning.</span> Frozen backbones may not adapt enough; full fine-tuning may erase the pretraining differences. LoRA provides a practical middle ground and is the default.</li>
+    <li><span class="runin">Stage 6 &mdash; LIBERO evaluation.</span> Evaluate all models under identical conditions with full standard rollout counts, seeds, and confidence-interval reporting, reporting LIBERO-Long and low-data conditions as the primary discriminators.</li>
+    <li><span class="runin">Stage 7 &mdash; Representation probing.</span> Freeze trained policies and analyze action-token hidden states with linear probes, clustering, temporal metrics, and attention visualization.</li>
+  </ol>
+
+  <h2 id="s11"><span class="num">11</span>Compute and Timeline</h2>
+  <p>The plan assumes a single node of 4&times; A100 80 GB with FSDP as the reference. At ~7B parameters all primary models (A, B, C, D) plus the flow expert fit comfortably; LoRA runs on a single A100 and full fine-tuning fits across the node. Estimates are anchored to a measured full-fine-tuning throughput of 1.17 s/step: at ~30k steps this is ~9.75 wall-clock hours (~39 A100-hours per ~7B run). On H100/H200 the same run is expected at roughly 1&ndash;2 optimization steps/s, dropping the full primary study to roughly 3&ndash;5 days of compute.</p>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 3.</b> Estimated compute for the primary study (4&times; A100 80 GB, ~30k steps/run at 1.17 s/step). A100-hours are approximate planning figures.</caption>
+      <thead><tr><th>Item</th><th>Per run (A100-h)</th><th>Runs</th><th>Subtotal</th></tr></thead>
+      <tbody>
+        <tr><td>Stage 1: baseline A (incl. reproduction)</td><td>39</td><td>3</td><td>117</td></tr>
+        <tr><td>Model C (Dream-7B) training</td><td>39</td><td>3</td><td>117</td></tr>
+        <tr><td>Model D (Qwen2.5-7B) training</td><td>39</td><td>3</td><td>117</td></tr>
+        <tr><td>Model B (topology ablation) training</td><td>39</td><td>3</td><td>117</td></tr>
+        <tr><td>LIBERO evaluation (4 suites, 2k rollouts)</td><td>15</td><td>12</td><td>180</td></tr>
+        <tr><td>Representation probing (extract + probes)</td><td>&mdash;</td><td>&mdash;</td><td>20</td></tr>
+        <tr><td>Primary total</td><td></td><td></td><td>~670</td></tr>
+        <tr class="deferred"><td>Optional C-large (DiffusionGemma + Gemma 4 control)</td><td>120</td><td>2&ndash;4</td><td>240&ndash;480</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 4.</b> Indicative eight-week plan (primary study).</caption>
+      <thead><tr><th>Week</th><th>Focus</th><th>Stage(s)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>OpenPI + LIBERO harness; reproduce <span class="mono">π0.5</span>-class baseline (Model A); measure throughput</td><td>Stage 1</td></tr>
+        <tr><td>2</td><td>Shared multimodal wrapper (Dream-VL / LaViDa); diffusion hidden-state extraction interface and <var>k</var> schedule</td><td>Infrastructure</td></tr>
+        <tr><td>3</td><td>Train Model C (Dream-7B), all seeds</td><td>Stage 2</td></tr>
+        <tr><td>4</td><td>Train Model D (Qwen2.5-7B); begin LoRA vs. full-FT comparison</td><td>Stages 4&ndash;5</td></tr>
+        <tr><td>5</td><td>Train Model B (topology ablation); finish fine-tuning-strategy comparison</td><td>Stages 3, 5</td></tr>
+        <tr><td>6</td><td>Full LIBERO evaluation of A/B/C/D; confidence intervals and paired tests</td><td>Stage 6</td></tr>
+        <tr><td>7</td><td>Representation probing vs. simulator ground truth; clustering and attention analysis</td><td>Stage 7</td></tr>
+        <tr><td>8</td><td>Analysis, dissociation checks, write-up, buffer</td><td>&mdash;</td></tr>
+        <tr class="deferred"><td>9&ndash;10</td><td>Optional: C-large DiffusionGemma integration, training, evaluation</td><td>Optional</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="s12"><span class="num">12</span>Expected Results</h2>
+  <p>The diffusion-trained backbone is expected to improve performance most clearly on LIBERO-Long, low-data/few-shot regimes, contact-timing prediction, action smoothness, and global trajectory consistency across a chunk. A strong positive result would show higher success on LIBERO-Long and low-data conditions, smoother chunks, and more predictive hidden states, <em>with the effect surviving in the matched <span class="mono">C&minus;D</span> contrast rather than only in the confounded <span class="mono">C&minus;A</span> contrast</em>. A useful negative result would show that flow-matching experts dominate performance and that the backbone prior matters less than action representation and normalization. A third, particularly informative outcome is a dissociation: more predictive probes but no rollout gain (representation quality does not bottleneck control), or a rollout gain with no probe difference (the benefit is not captured by the probed quantities). All three cases are reported explicitly.</p>
+
+  <h2 id="s13"><span class="num">13</span>Risks and Mitigations</h2>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 5.</b> Research risks and mitigation strategies.</caption>
+      <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>Any diffusion-vs-AR gain is confounded by scale, architecture, pretraining data, or compute</td><td><em>Primary risk.</em> Rest the identifying claim on <span class="mono">C&minus;D</span> (shared initialization and architecture); report <span class="mono">C&minus;A</span> only as a confounded upper bound.</td></tr>
+        <tr><td>LIBERO success saturates near ceiling (Dream-VLA reports ~97%)</td><td>Make LIBERO-Long and low-data/few-shot the primary conditions; rely on non-saturating continuous and representation-level metrics.</td></tr>
+        <tr><td>Simulation-only results may not transfer to real robots</td><td>Frame claims as evidence about backbone representations under a controlled benchmark; note real-robot validation as future work.</td></tr>
+        <tr><td>Model B (topology change) is nearly identical to the baseline</td><td>Baseline A is already prefix-LM with a bidirectional action block; if B &asymp; A, that is itself a reportable finding that the mask is not the bottleneck.</td></tr>
+        <tr><td>Diffusion backbone does not improve success</td><td>Representation-level analysis identifies whether hidden-state quality differs even when success is similar; a null result is informative for VLA design.</td></tr>
+        <tr><td>DiffusionGemma (C-large) too large/awkward to integrate</td><td>Scoped as a non-load-bearing confirmation; the primary study stands on the ~7B Dream/Qwen pair.</td></tr>
+        <tr><td>More predictive probes do not imply better policies</td><td>Treat the probe&rarr;rollout link as a hypothesis to test; report cases where probe wins and rollout wins dissociate.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="s14"><span class="num">14</span>Expected Contributions</h2>
+  <ol class="body-list">
+    <li>A controlled architecture for combining diffusion-trained multimodal backbones with flow-matching VLA action experts.</li>
+    <li>A systematic, <em>scale/architecture-matched</em> comparison between AR and diffusion-trained backbones under the same action decoder, with the diffusion prior identified through a matched control (<span class="mono">C&minus;D</span>) rather than a confounded raw comparison.</li>
+    <li>A precise characterization of the <span class="mono">π0.5</span> backbone as a prefix-LM (bidirectional action block), correcting the common "causal VLA backbone" framing and separating attention-mask topology from the pretraining prior.</li>
+    <li>Evidence on whether backbone generative prior affects action-token hidden representations for continuous robot control.</li>
+    <li>Representation-level analysis of action-token hidden states in VLA policies.</li>
+    <li>Controlled evaluation on LIBERO, directly comparable to published diffusion-VLA results.</li>
+  </ol>
+
+  <h2 id="s15"><span class="num">15</span>Minimal Viable Study</h2>
+  <p>A minimal viable study can be completed on a single LIBERO suite and should be run first. To stay interpretable at minimal scope, the MVP includes the matched control rather than only a raw diffusion-vs-stock pair: one suite (LIBERO-Long preferred, least susceptible to ceiling effects); Model A (stock <span class="mono">π0.5</span> prefix-LM baseline); Model C (Dream-7B under the shared recipe); Model D (Qwen2.5-7B, Dream's AR base, identical recipe) so that <span class="mono">C&minus;D</span> is identifiable; the same flow expert, dataset, and action horizon across all three; multiple seeds with full standard rollout counts and confidence intervals; and representation probing with matched probe capacity using simulator ground-truth labels. Because both models are ~7B and openly available, Model D is affordable within the MVP, so the identifying <span class="mono">C&minus;D</span> contrast is available from the outset.</p>
+
+  <h2 id="s16"><span class="num">16</span>Final Positioning</h2>
+  <p>The proposed work is not simply "using DiffusionGemma for robotics." The deeper contribution is to test whether diffusion-trained bidirectional multimodal pretraining produces better hidden representations for flow-matching action generation in VLA policies.</p>
+  <div class="box"><span class="lead">Positioning statement.</span> This project investigates whether diffusion-trained bidirectional multimodal backbones improve the action-token representations used by flow-matching Vision-Language-Action policies for continuous robot control.</div>
+  <p>The strongest version keeps the flow-matching action expert fixed and isolates the pretraining prior of the backbone through the scale/architecture-matched <span class="mono">C&minus;D</span> contrast, rather than relying on a raw diffusion-vs-stock comparison that conflates prior with scale. No single contrast is perfectly clean; the contribution is a design whose contrasts <em>bracket</em> the effect and make the residual confounds explicit, evaluated on a fair, reproducible, high-<var>n</var> benchmark.</p>
+
+  <h2><span class="num">&nbsp;</span>References</h2>
+  <ol class="refs">
+    <li>C. Chi, Z. Xu, S. Feng, E. Cousineau, Y. Du, B. Burchfiel, R. Tedrake, S. Song. <span class="t">Diffusion Policy: Visuomotor Policy Learning via Action Diffusion.</span> RSS 2023; IJRR 2025. arXiv:2303.04137.</li>
+    <li>Physical Intelligence. <span class="t">π0: A Vision-Language-Action Flow Model for General Robot Control.</span> 2024.</li>
+    <li>K. Black et al. <span class="t">π0.5: A Vision-Language-Action Model with Open-World Generalization.</span> CoRL 2025, PMLR 305:17&ndash;40.</li>
+    <li>Physical Intelligence. <span class="t">OpenPI: Open-source implementations for π0 and π0.5.</span> GitHub.</li>
+    <li>Google AI for Developers. <span class="t">DiffusionGemma model overview.</span> 2026.</li>
+    <li>Google AI for Developers. <span class="t">DiffusionGemma model card.</span> 2026.</li>
+    <li>X. Li, V. Belagali, J. Shang, M. S. Ryoo. <span class="t">Crossway Diffusion: Improving Diffusion-based Visuomotor Policy via Self-supervised Learning.</span> ICRA 2024. arXiv:2307.01849.</li>
+    <li>C. Liu, Y. Zhao, H. Chen, X. Han, J. Gao, E. Adeli, Y. Du. <span class="t">Ordered Action Tokens for Visuomotor Policy Learning.</span> arXiv:2607.21670, 2026.</li>
+    <li>Y. Ze, G. Zhang, K. Zhang, C. Hu, M. Wang, H. Xu. <span class="t">3D Diffusion Policy.</span> arXiv:2403.03954, 2024.</li>
+    <li>J. Ye, Z. Xie et al. (HKU NLP &amp; Huawei Noah's Ark Lab). <span class="t">Dream 7B: Diffusion Large Language Models.</span> arXiv:2508.15487, 2025.</li>
+    <li>Qwen Team. <span class="t">Qwen2.5 Technical Report.</span> arXiv:2412.15115, 2024.</li>
+    <li>S. Li, K. Kallidromitis et al. <span class="t">LaViDa: A Large Diffusion Language Model for Multimodal Understanding.</span> arXiv:2505.16839, 2025.</li>
+    <li>DreamLM (HKU NLP). <span class="t">Dream-VL and Dream-VLA: A Diffusion VLM and a Diffusion VLA.</span> 2025&ndash;2026.</li>
+    <li>Y. Wen et al. <span class="t">LLaDA-VLA: Vision Language Diffusion Action Models.</span> 2025.</li>
+    <li><span class="t">Discrete Diffusion VLA: Bringing Discrete Diffusion to Action Decoding in VLA Policies.</span> arXiv:2508.20072, 2025.</li>
+    <li>B. Liu, Y. Zhu, C. Gao, Y. Feng, Q. Liu, Y. Zhu, P. Stone. <span class="t">LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning.</span> NeurIPS D&amp;B 2023. arXiv:2306.03310.</li>
+  </ol>
+
+  <div class="foot">Ryan Rahman · Research proposal (living document) · Rendered from <code>diffusion_backbone_vla_proposal.tex</code>.</div>
+</article>
+</body>
+</html>

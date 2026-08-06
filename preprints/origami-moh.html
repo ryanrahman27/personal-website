@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Origami-MoH — Research Proposal · Ryan Rahman</title>
+<meta name="description" content="Tactile-Augmented Mixture-of-Horizons Flow Policies for Bimanual Dexterous Origami — a research proposal for the IROS 2026 Robotic Origami Challenge by Ryan Rahman.">
+<style>:root{color-scheme:light}html,body{margin:0}body{background:#ffffff;color:#1a1c22}img{max-width:100%}
+.backbar{max-width:44rem;margin:0 auto;padding:1.1rem 1.5rem 0;font:600 .8rem/1 ui-monospace,Consolas,monospace;letter-spacing:.04em;text-transform:uppercase}
+.backbar a{color:#b11226;text-decoration:none}.backbar a:hover{text-decoration:underline}</style>
+<style>
+  /* Plain professional preprint — mirrors the LaTeX PDF: white paper, serif type,
+     crimson used only for the eyebrow and links. Deliberately single (light) theme,
+     like a printed document. */
+  :root{
+    --paper:#ffffff; --ink:#1a1c22; --muted:#4b5563; --rule:#d1d5db;
+    --accent:#b11226; --boxbg:#f7f7f8; --boxline:#d1d5db;
+    --serif:"Latin Modern Roman",Georgia,"Times New Roman","Nimbus Roman",Times,serif;
+    --mono:"Latin Modern Mono","Cascadia Code",Consolas,ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--paper);color:var(--ink);margin:0;
+    font-family:var(--serif);font-size:17px;line-height:1.52;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:44rem;margin:0 auto;padding:3.5rem 1.5rem 5rem;}
+
+  /* masthead */
+  .masthead{text-align:center;margin-bottom:1.6rem;}
+  .eyebrow{font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:.9rem;}
+  h1.title{font-weight:700;font-size:1.95rem;line-height:1.2;margin:0 auto .6rem;
+    max-width:36rem;text-wrap:balance;}
+  .subtitle{font-size:1.02rem;color:var(--muted);margin:.3rem auto 1.1rem;max-width:34rem;line-height:1.4;}
+  .rule{width:70%;margin:1.1rem auto;border:0;border-top:.5px solid var(--rule);}
+  .byline{font-size:.98rem;}
+  .byline .name{font-weight:700;}
+  .byline .aff,.byline .date{color:var(--muted);font-size:.9rem;}
+  .byline .aff{display:block;margin-top:.15rem;}
+  .byline .date{display:block;margin-top:.05rem;}
+
+  /* callout box == \proposalbox */
+  .box{background:var(--boxbg);border:1px solid var(--boxline);border-radius:2px;
+    padding:.85rem 1.05rem;margin:1.5rem 0;font-size:.97rem;line-height:1.5;}
+  .box .lead{font-weight:700;}
+
+  /* contents */
+  .toc{margin:1.6rem 0 2.2rem;}
+  .toc .h{font-weight:700;font-size:1.05rem;margin-bottom:.4rem;}
+  .toc ol{margin:0;padding-left:1.6rem;columns:2;column-gap:2rem;font-size:.92rem;}
+  .toc li{margin:.12rem 0;}
+  .toc a{color:var(--ink);text-decoration:none;}
+  .toc a:hover{color:var(--accent);}
+
+  /* sections */
+  h2{font-weight:700;font-size:1.3rem;margin:2.2rem 0 .5rem;line-height:1.25;text-wrap:balance;}
+  h2 .num{margin-right:.6rem;}
+  h3{font-weight:700;font-size:1.04rem;margin:1.35rem 0 .25rem;}
+  h3 .num{margin-right:.5rem;color:var(--muted);font-weight:400;}
+  p{margin:.6rem 0;text-align:justify;hyphens:auto;}
+  .runin{font-weight:700;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  ul,ol.body-list{margin:.6rem 0;padding-left:1.4rem;}
+  li{margin:.28rem 0;}
+  code,.mono{font-family:var(--mono);font-size:.85em;}
+  var{font-style:italic;}
+
+  /* equations */
+  .eq{display:flex;align-items:center;gap:1rem;margin:1rem 0;overflow-x:auto;}
+  .eq .body{flex:1;text-align:center;white-space:nowrap;font-size:1.02rem;}
+  .eq .n{flex:none;color:var(--ink);font-size:.95rem;}
+  .op{color:var(--muted);}
+
+  /* figure */
+  figure{margin:1.8rem 0;text-align:center;}
+  .figbox{overflow-x:auto;padding:.4rem 0;}
+  figcaption{font-size:.86rem;line-height:1.45;color:var(--muted);margin-top:.7rem;
+    text-align:left;max-width:40rem;margin-left:auto;margin-right:auto;}
+  figcaption b{color:var(--ink);font-weight:700;}
+
+  /* tables (booktabs) */
+  .tablewrap{overflow-x:auto;margin:1.3rem 0;}
+  table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:34rem;line-height:1.4;}
+  caption{caption-side:top;text-align:left;font-size:.86rem;color:var(--muted);margin-bottom:.5rem;}
+  caption b{color:var(--ink);}
+  thead th{text-align:left;font-weight:700;padding:.45rem .7rem;
+    border-top:1.5px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom;}
+  tbody td{padding:.5rem .7rem;vertical-align:top;}
+  tbody tr:last-child td{border-bottom:1.5px solid var(--ink);}
+  tbody td:first-child{font-weight:700;white-space:nowrap;}
+  .deferred td{color:var(--muted);border-top:1px solid var(--rule);}
+
+  /* references */
+  ol.refs{font-size:.86rem;line-height:1.45;counter-reset:ref;list-style:none;padding-left:0;margin-top:.6rem;}
+  ol.refs li{counter-increment:ref;position:relative;padding-left:2.3rem;margin:.35rem 0;text-align:left;}
+  ol.refs li::before{content:"["counter(ref)"]";position:absolute;left:0;color:var(--ink);}
+  ol.refs .t{font-style:italic;}
+
+  .foot{margin-top:2.8rem;padding-top:.9rem;border-top:.5px solid var(--rule);
+    font-size:.8rem;color:var(--muted);text-align:center;}
+
+  @media (max-width:640px){
+    body{font-size:16px;}
+    h1.title{font-size:1.6rem;}
+    .toc ol{columns:1;}
+    .wrap{padding:2.5rem 1.1rem 3.5rem;}
+  }
+</style>
+</head>
+<body>
+<div class="backbar"><a href="../index.html">&larr; Ryan Rahman</a></div>
+<article class="wrap">
+  <div class="masthead">
+    <div class="eyebrow">Research Proposal</div>
+    <h1 class="title">Tactile-Augmented Mixture-of-Horizons Flow Policies for Bimanual Dexterous Origami</h1>
+    <div class="subtitle">A single vision-conditioned VLA that combines multi-horizon reactive action prediction with progressive tactile fusion for autonomous paper folding.</div>
+    <hr class="rule" />
+    <div class="byline">
+      <span class="name">Ryan Rahman</span>
+      <span class="aff">Axibo Robotics — IROS 2026 Robotic Origami Challenge</span>
+      <span class="date">Preprint · living document</span>
+    </div>
+  </div>
+
+  <div class="box"><span class="lead">Central question.</span> On a 65-DoF bimanual dexterous platform with rich tactile sensing, does augmenting a flow-matching VLA with (i) a Mixture-of-Horizons reactive action head and (ii) progressive tactile fusion improve autonomous rigid-crease paper folding over a stock vision-only policy?</div>
+
+  <nav class="toc">
+    <div class="h">Contents</div>
+    <ol>
+      <li><a href="#s1">Abstract</a></li>
+      <li><a href="#s2">Introduction</a></li>
+      <li><a href="#s3">Problem Setup</a></li>
+      <li><a href="#s4">Related Work</a></li>
+      <li><a href="#s5">Method: Origami-MoH</a></li>
+      <li><a href="#s6">Staged Research Plan</a></li>
+      <li><a href="#s7">Implementation</a></li>
+      <li><a href="#s8">Evaluation Protocol</a></li>
+      <li><a href="#s9">Risks and Mitigations</a></li>
+      <li><a href="#s10">Conclusion</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="s1"><span class="num">1</span>Abstract</h2>
+  <p>We propose <strong>Origami-MoH</strong>, a vision-language-action (VLA) policy for autonomous bimanual dexterous paper folding, targeting the IROS 2026 Robotic Origami Challenge (traditional paper-airplane folding, a fixed six-fold sequence on a 65-DoF system: two 7-DoF arms and two 22-DoF hands). We fine-tune the <span class="mono">π0.5</span> flow-matching VLA and augment it along two axes we argue are decisive for contact-rich deformable manipulation: (i) a <em>Mixture-of-Horizons</em> action head that fuses predictions across chunk lengths and replans adaptively on cross-horizon disagreement, and (ii) progressive <em>tactile fusion</em> of a 60-D fingertip force/torque signal, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder. Because the dataset ships no language and the scene and sequence are fixed, we train one vision-conditioned policy over the whole sequence rather than a language-switched hierarchy, relying on the visual and tactile state to disambiguate the active fold. We give a staged plan (Phases 0–4) with go/no-go criteria, an evaluation over held-out sessions, and the systems work to train on a per-session-sharded, 65-DoF, tactile-rich dataset. This document is a living proposal; empirical results will be reported as phases complete.</p>
+
+  <h2 id="s2"><span class="num">2</span>Introduction</h2>
+  <p>Autonomous origami is a demanding testbed: the manipuland is thin and deformable, creases must be placed and pressed with sub-centimeter precision, folds self-occlude the very seams the policy must reason about, and the task is long-horizon and sequential. The challenge instantiates this on a bimanual dexterous platform, judging success by whether the folded result is a recognizable paper airplane.</p>
+  <p>VLAs such as <span class="mono">π0</span> and <span class="mono">π0.5</span> [1,2] show that a pretrained vision-language backbone plus a flow-matching action expert can be fine-tuned into competent policies from modest demonstration sets. But three properties of the origami setting are not addressed by a stock VLA: the task is <strong>contact-rich</strong>, and creasing is sensed as much through force as vision; execution must be <strong>reactive</strong>, since paper does not deform deterministically; and the demonstration set is <strong>small and un-annotated</strong>. We address these through progressive tactile fusion, a Mixture-of-Horizons head with disagreement-based replanning, and single-policy multi-session co-training rather than per-fold sub-policies.</p>
+  <div class="box"><span class="lead">Thesis.</span> For a fixed, contact-rich fold sequence, a flow-matching VLA becomes competitive when made <em>reactive</em> (multi-horizon prediction with disagreement-based replanning) and <em>contact-aware</em> (progressive tactile fusion), trained as one vision-conditioned policy whose visual and tactile state implicitly identify the active fold.</div>
+  <h3><span class="num">2.1</span>Contributions</h3>
+  <ol class="body-list">
+    <li>A concrete architecture, <strong>Origami-MoH</strong>, combining <span class="mono">π0.5</span> flow matching, a Mixture-of-Horizons action head, and tactile fusion, specialized to a 65-DoF bimanual dexterous embodiment.</li>
+    <li>A staged, falsifiable plan (Phases 0–4) that isolates the value of tactile sensing, then equips the policy with long-horizon procedural memory.</li>
+    <li>The systems work to make this trainable in <span class="mono">openpi</span>: per-session multi-dataset training via <code>MultiLeRobotDataset</code>, a fix enabling 65-DoF fine-tuning from a 32-DoF base checkpoint, and a video-free normalization pass.</li>
+  </ol>
+
+  <h2 id="s3"><span class="num">3</span>Problem Setup</h2>
+  <p><span class="runin">Embodiment and observations.</span> The platform is bimanual: two 7-DoF arms and two 22-DoF Sharpa hands plus a 7-DoF torso, giving a 65-D joint action/state vector,</p>
+  <div class="eq"><div class="body"><var>a</var><sub>t</sub>, <var>s</var><sub>t</sub> &isin; &#8477;<sup>65</sup> = [ <var>q</var><sup>L</sup><sub>arm</sub>(7), <var>q</var><sup>L</sup><sub>hand</sub>(22), <var>q</var><sup>R</sup><sub>arm</sub>(7), <var>q</var><sup>R</sup><sub>hand</sub>(22), <var>q</var><sub>torso</sub>(7) ]</div><div class="n">(1)</div></div>
+  <p>Sensing comprises six synchronized camera streams (head L/R, wrist L/R, two tactile-video streams) at 30 Hz, a 60-D fingertip signal <var>&tau;</var><sub>t</sub> &isin; &#8477;<sup>60</sup> (ten fingertips × six-axis force/torque), and 65-D joint torque.</p>
+  <p><span class="runin">Dataset.</span> The dataset contains 143 collection sessions ("seasons"), each a self-contained LeRobot dataset, totaling ~4.8M frames. Two properties shape the systems design: it is <strong>sharded per session</strong> (no flat root), and it carries only a placeholder task string — <em>i.e.</em>, effectively no language. All sessions are training sessions; we build an eval split by holding out whole sessions.</p>
+  <p><span class="runin">Objective.</span> Learn <var>&pi;</var><sub>&theta;</sub>(<var>a</var><sub>t:t+H</sub> | <var>o</var><sub>t</sub>) mapping an observation <var>o</var><sub>t</sub> = (images, <var>s</var><sub>t</sub>, <var>&tau;</var><sub>t</sub>, &ell;) — with &ell; a fixed prompt — to an <var>H</var>-step action chunk, such that closed-loop execution produces a recognizable airplane. Because the scene and fold order are fixed, the current observation identifies the active fold, motivating a single vision-conditioned policy over explicit sub-task conditioning (§5.4).</p>
+
+  <h2 id="s4"><span class="num">4</span>Related Work</h2>
+  <h3><span class="num">4.1</span>VLA backbones &amp; flow-matching policies</h3>
+  <p><span class="mono">π0</span>/<span class="mono">π0.5</span> [1,2] pair a PaliGemma-style backbone with a flow-matching expert; <span class="mono">π0.5</span> adds a hierarchical structure and discrete state tokenization. Diffusion Policy [14] and ACT/ALOHA [15] are strong single-task, low-data baselines — motivating our choice to keep the pretrained visual prior rather than train an encoder from scratch on this visually hard deformable task.</p>
+  <h3><span class="num">4.2</span>Precision &amp; multi-horizon prediction</h3>
+  <p>Chunk length trades reactivity against smoothness. Mixture-of-Horizons [3] fuses truncated horizons through a shared expert. Coarse-to-fine / spectral methods — CARP [10], CF-VLA [11], Causal Spectral Policy [12], related to the FAST frequency view [13] — improve fine-grained precision; we treat a spectral head as a deferred, MoH-complementary option.</p>
+  <h3><span class="num">4.3</span>Tactile fusion</h3>
+  <p>ForceVLA [6] inserts a force-aware mixture-of-experts (FVLMoE) at action decoding; ViTacFormer [7] cross-attends vision and touch with an autoregressive contact head on multi-fingered hands; 3D-ViTac [8] builds a unified 3D visuo-tactile representation; Tactile-VLA [9] fuses four modalities with a hybrid position-force controller. Reported gains on contact-rich dexterous tasks are consistently 20–50%. Our FVLMoE (Phase 2) follows ForceVLA most closely — its low-D force interface matches our 60-D signal.</p>
+  <h3><span class="num">4.4</span>Reactive execution, coherence &amp; long-horizon</h3>
+  <p>Real-Time Chunking [4] enables asynchronous execution under latency; Action Coherence Guidance [5] is training-free guidance that reduces the drift flow policies inherit from noisy demos. We adopt MoH's disagreement-based replanning for reactivity and ACG for coherence. For long-horizon <em>memory</em>, RoboTTT [16] inserts gated test-time-training layers alongside attention — a fixed-size fast-weight recurrent state that compresses thousands of timesteps into weight space and conditions on the full rollout at constant inference latency, demonstrated on multi-minute bimanual dexterous assembly. We view this not as a generic drift patch but as the principled form of <em>observation history</em> (§5.4): a memory architecture whose near-zero gate initialization preserves the pretrained backbone. Because the fold is long and strictly ordered, we adopt it as a dedicated phase (Phase 4, §5.6) rather than a contingency.</p>
+  <h3><span class="num">4.5</span>Deformable manipulation</h3>
+  <p>DeMaVLA [17] is a single-checkpoint VLA for multi-category garment folding, with a data-scaling trend supporting broad pretraining. We note the gap: garment folding is not rigid-crease paper folding, and no origami-specific baseline is established — we treat cloth results as suggestive, not transferable.</p>
+
+  <h2 id="s5"><span class="num">5</span>Method: Origami-MoH</h2>
+  <h3><span class="num">5.1</span>Base policy: π0.5 flow matching</h3>
+  <p>The backbone is <span class="mono">π0.5</span>: ~3B parameters — a PaliGemma vision-language module (SigLIP + Gemma LM) and a Gemma-300M action expert, a conditional flow-matching model. With a clean chunk <var>a</var>, noise <var>&epsilon;</var> &sim; <var>N</var>(0, I), and interpolation <var>x</var><sub>t</sub> = <var>t&epsilon;</var> + (1&minus;<var>t</var>)<var>a</var>, the expert <var>v</var><sub>&theta;</sub> regresses the target velocity:</p>
+  <div class="eq"><div class="body">&#8466;<sub>FM</sub>(<var>&theta;</var>) = <var>E</var><sub><var>a</var>,<var>&epsilon;</var>,<var>t</var></sub> &Vert; <var>v</var><sub>&theta;</sub>(<var>x</var><sub>t</sub>, <var>t</var>, <var>o</var>) <span class="op">&minus;</span> (<var>&epsilon;</var> <span class="op">&minus;</span> <var>a</var>) &Vert;<sup>2</sup></div><div class="n">(2)</div></div>
+  <p>Actions are produced by integrating the field from noise via Euler steps <var>x</var><sub>t+&Delta;t</sub> = <var>x</var><sub>t</sub> + &Delta;<var>t</var> <var>v</var><sub>&theta;</sub>(<var>x</var><sub>t</sub>,<var>t</var>,<var>o</var>). For <span class="mono">π0.5</span>, proprioceptive state is discretized and injected as language tokens — which we exploit below.</p>
+  <h3><span class="num">5.2</span>Mixture-of-Horizons action head</h3>
+  <p>Rather than commit to one chunk length, MoH runs horizons &#8459; = {5,10,15,20,25,30} through the shared expert and fuses their per-step velocities with a linear gate. With <var>v</var><sup>(h)</sup><sub>t</sub> the velocity under horizon <var>h</var> and <var>g</var><sub>h,t</sub> the gate weight (masked softmax over active horizons):</p>
+  <div class="eq"><div class="body"><var>v</var><sub>t</sub> = &sum;<sub><var>h</var>&isin;&#8459;</sub> <var>g</var><sub>h,t</sub> <var>v</var><sup>(h)</sup><sub>t</sub></div><div class="n">(3)</div></div>
+  <p>Training combines a per-horizon flow-matching loss, an auxiliary loss on the fused prediction, and a gate load-balancing term. At inference we compute per-step <strong>cross-horizon disagreement</strong> (the gate-weighted &ell;<sub>1</sub> deviation between each horizon's Euler update and the fused update) and use it to set an adaptive replanning length: extend the executable prefix while horizons agree, truncate when they diverge — <em>e.g.</em>, near a crease. This gives reactivity without an external real-time-chunking mechanism.</p>
+  <h3><span class="num">5.3</span>Progressive tactile fusion</h3>
+  <p>We introduce tactile in increasing architectural depth, so its value is established before the most invasive change.</p>
+  <p><span class="runin">(P0) Proprioceptive concatenation.</span> Append the 60-D force/torque to the state, <var>s&#771;</var><sub>t</sub> = [<var>s</var><sub>t</sub>; <var>&tau;</var><sub>t</sub>] &isin; &#8477;<sup>125</sup>. Under <span class="mono">π0.5</span>, state is discretized into the token stream, so tactile is treated exactly like joint proprioception with <em>no</em> model-code change — a go/no-go probe on whether the signal is informative at all.</p>
+  <p><span class="runin">(P1) Tactile tokens.</span> A learned encoder maps the force/torque stream (and optionally the tactile-video streams via the vision tower) into prefix tokens that co-attend with vision and language, à la ViTacFormer [7]. Tokens enter the KV-cached prefix, encoded once and shared across all MoH horizons.</p>
+  <p><span class="runin">(P2) Force-aware mixture-of-experts (FVLMoE).</span> Replace the action expert's feed-forward block with a force-aware MoE (ForceVLA [6]): a router conditioned on the post-attention token (which, after joint attention over tactile/vision/language, carries fused force context) mixes modality-specialized expert FFNs. Crucially this MoE acts on a different axis and stage than the MoH gate — modality experts at the trunk FFN vs. horizon fusion at the output head — so the two mixtures <strong>compose rather than compete</strong>.</p>
+  <h3><span class="num">5.4</span>A single vision-conditioned policy</h3>
+  <p>With no language annotations and a fixed fold order, we condition on a single constant prompt ("fold a paper airplane"); a constant token carries no discriminative signal, so the policy is effectively vision-conditioned. We train <strong>one</strong> policy over the whole sequence rather than per-fold sub-policies: chunk-based training already samples short (~1 s) windows from anywhere in an episode, so the model learns fold-local behavior implicitly, and the current image plus proprio/tactile state disambiguate the active fold. Splitting 143 sessions into per-fold policies would starve each of data. If phase confusion appears, we escalate a ladder of increasing cost: (i) short proprio/tactile history (cheap, no labels), (ii) image history, (iii) constant-latency full-rollout memory via gated TTT layers [16] — the principled limit of observation history, which we commit to as a dedicated phase (Phase 4, §5.6) — and (iv) an explicit planner supplying a sub-task ID, the only rung needing segmentation. We develop Phase 4 as part of the plan and evaluate it as an A/B against frame-stacked history on the per-fold diagnostic (§8); the planner rung (iv) remains contingent on that result.</p>
+
+  <figure>
+    <div class="figbox">
+      <svg viewBox="0 0 720 300" width="100%" role="img" aria-label="Origami-MoH architecture diagram" style="min-width:560px;display:block;margin:0 auto;">
+        <defs>
+          <marker id="ar" markerWidth="8" markerHeight="8" refX="6.5" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" style="fill:#555;"></path>
+          </marker>
+          <style>
+            .b{fill:#ffffff;stroke:#c9ccd1;stroke-width:1.3;}
+            .io{fill:#ffffff;stroke:#b11226;stroke-width:1.2;}
+            .head{fill:#faf0f1;stroke:#b11226;stroke-width:1.2;}
+            .lab{font-family:Georgia,serif;font-size:11px;fill:#1a1c22;}
+            .sub{font-family:Georgia,serif;font-size:9.5px;fill:#555;}
+            .flow{stroke:#555;stroke-width:1.2;fill:none;}
+          </style>
+        </defs>
+        <rect class="io" x="10" y="24" width="150" height="30" rx="4"></rect>
+        <text class="lab" x="85" y="43" text-anchor="middle">6 camera views</text>
+        <rect class="io" x="10" y="66" width="150" height="30" rx="4"></rect>
+        <text class="lab" x="85" y="85" text-anchor="middle">constant prompt</text>
+        <rect class="io" x="10" y="170" width="150" height="30" rx="4"></rect>
+        <text class="lab" x="85" y="189" text-anchor="middle">tactile F/T (60-D)</text>
+        <rect class="io" x="10" y="212" width="150" height="30" rx="4"></rect>
+        <text class="lab" x="85" y="231" text-anchor="middle">proprio (65-D)</text>
+        <rect class="b" x="230" y="34" width="150" height="54" rx="5"></rect>
+        <text class="lab" x="305" y="55" text-anchor="middle">PaliGemma VLM</text>
+        <text class="sub" x="305" y="70" text-anchor="middle">prefix · KV-cached once</text>
+        <rect class="b" x="230" y="176" width="150" height="54" rx="5"></rect>
+        <text class="lab" x="305" y="197" text-anchor="middle">action expert</text>
+        <text class="sub" x="305" y="212" text-anchor="middle">Gemma-300M · FVLMoE (P2)</text>
+        <rect class="head" x="455" y="40" width="140" height="48" rx="5"></rect>
+        <text class="lab" x="525" y="60" text-anchor="middle">MoH gate</text>
+        <text class="sub" x="525" y="75" text-anchor="middle">fuse horizons {5..30}</text>
+        <rect class="head" x="455" y="176" width="140" height="48" rx="5"></rect>
+        <text class="lab" x="525" y="196" text-anchor="middle">flow sampling</text>
+        <text class="sub" x="525" y="211" text-anchor="middle">+ ACG · B-spline (P3)</text>
+        <rect class="io" x="628" y="104" width="84" height="92" rx="5"></rect>
+        <text class="lab" x="670" y="140" text-anchor="middle">65-D</text>
+        <text class="sub" x="670" y="156" text-anchor="middle">action</text>
+        <text class="sub" x="670" y="169" text-anchor="middle">chunk +</text>
+        <text class="sub" x="670" y="182" text-anchor="middle">replan</text>
+        <path class="flow" d="M160,39 H228" marker-end="url(#ar)"></path>
+        <path class="flow" d="M160,81 H210 V61 H228" marker-end="url(#ar)"></path>
+        <path class="flow" d="M160,185 H200 V70 H228" marker-end="url(#ar)"></path>
+        <path class="flow" d="M160,197 H205 V203 H228" marker-end="url(#ar)"></path>
+        <path class="flow" d="M160,227 H215 V210 H228" marker-end="url(#ar)"></path>
+        <path class="flow" d="M380,61 H452" marker-end="url(#ar)"></path>
+        <path class="flow" d="M380,203 H420 V64 H452" marker-end="url(#ar)"></path>
+        <path class="flow" d="M525,88 V176" marker-end="url(#ar)"></path>
+        <path class="flow" d="M595,64 H612 V140 H626" marker-end="url(#ar)"></path>
+        <path class="flow" d="M595,200 H612 V150 H626" marker-end="url(#ar)"></path>
+      </svg>
+    </div>
+    <figcaption><b>Figure 1.</b> Origami-MoH. Tactile enters as proprioceptive concatenation (P0), prefix tokens (P1), and a force-aware MoE in the action expert (P2). The MoH gate fuses horizons at the output head; ACG and optional B-spline smoothing (P3) refine flow sampling. The horizon fusion and modality mixture act on different axes/stages and compose.</figcaption>
+  </figure>
+
+  <h3><span class="num">5.5</span>Inference-time coherence</h3>
+  <p>Flow policies trained by imitation inherit demonstration jitter, which can destabilize fine motions. We adopt Action Coherence Guidance [5], a training-free guidance term applied to the fused velocity before each Euler step (single guidance-weight knob); it composes with MoH and needs no retraining. As an optional final smoothing step — applied only once the policy is otherwise competent and we want the cleanest motion — we may fit a smoothing <strong>B-spline</strong> [18] to the sampled action chunk, yielding a <var>C</var><sup>2</sup>-continuous, jerk-free trajectory that preserves crease keyframes. Like ACG, it is post-hoc and needs no retraining.</p>
+  <h3><span class="num">5.6</span>Long-horizon procedural memory (Phase 4)</h3>
+  <p>Paper folding is a minutes-long, strictly ordered sequence; a Markov policy must re-infer its place in the sequence from each observation. Phase 4 gives the policy an explicit <em>procedural memory</em> — an intuition we summarize as "muscle memory" — by inserting gated test-time-training (TTT) layers into the backbone, following RoboTTT [16]. Each TTT layer maintains a fixed-size <strong>fast-weight</strong> state updated by an inner-loop gradient step (a key-value binding objective) as the rollout proceeds, compressing the entire fold history into weight space and conditioning on it at <em>constant</em> inference latency. The layers enter through a learned near-zero gate, <var>o</var> = tanh(<var>&alpha;</var>)·<var>o</var><sub>TTT</sub> + <var>o</var><sub>attn</sub>, so at init the pretrained backbone is preserved and the memory is acquired during fine-tuning. This is the principled limit of the observation-history ladder (§5.4): instead of a few stacked frames, the policy carries the whole sequence, which we expect to help long-horizon phase tracking and recovery. We evaluate Phase 4 as an A/B against frame-stacked history on the per-fold diagnostic (§8).</p>
+  <p><span class="runin">Greenlight criterion.</span> Because P4 is the most expensive increment (the <span class="mono">π0.5</span> port plus long-context training), we gate its full build on a cheap early signal rather than committing to it blind. In P1 we run a frame-stacking observation-history probe; we commit to the P4 build only if <em>residual phase confusion remains</em> in the per-fold diagnostic after that probe. If cheap stacked history already closes the long-horizon gap, P4 is treated as optional. This keeps P4 in the plan — so the capability is developed before, not after, we discover we need it — while spending its budget only on evidence that the memoryless policy cannot track the fold sequence on its own.</p>
+  <p>Two engineering considerations are internal to this phase rather than reasons to defer it. First, the mechanism was demonstrated on the GR00T-N1.7 backbone for multi-minute bimanual dexterous assembly and must be ported to the <span class="mono">π0.5</span> backbone; because the gate is inserted alongside attention with a near-zero init, this is an additive, adapter-style change rather than a backbone rebuild. Second, long-context training (sequence action forcing with truncated backpropagation through time) is heavier than chunk-based fine-tuning and interacts with MoH's multi-horizon batching, so Phase 4 is sequenced after a competent base policy (Phases 0–2) and its inference-time refinements (Phase 3).</p>
+
+  <h2 id="s6"><span class="num">6</span>Staged Research Plan</h2>
+  <p>We proceed in phases with explicit success criteria, so each increment is justified by the previous result rather than assumed.</p>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 1.</b> Phased plan. Each phase is independently trainable and compared against the previous checkpoint on held-out sessions.</caption>
+      <thead><tr><th>Phase</th><th>Change</th><th>Question / go–no-go</th></tr></thead>
+      <tbody>
+        <tr><td>P0</td><td>Tactile-in-state A/B: π0.5+MoH with vs. without [<var>s</var>;<var>&tau;</var>].</td><td>Does the tactile signal improve fold success <em>at all</em>? If not, richer fusion is unlikely to help.</td></tr>
+        <tr><td>P1</td><td>Tactile encoder → prefix tokens; optional short obs. history.</td><td>Does structured tactile beat concatenation? Does history resolve fold-phase confusion?</td></tr>
+        <tr><td>P2</td><td>Force-aware MoE (FVLMoE) in the action expert.</td><td>Does force-conditioned routing add precision under visual occlusion at the crease?</td></tr>
+        <tr><td>P3</td><td>Action Coherence Guidance (+ optional B-spline) at inference.</td><td>Training-free: does coherence guidance / smoothing reduce drift and jerk on long rollouts?</td></tr>
+        <tr><td>P4</td><td>Gated TTT-layer memory (RoboTTT-style): a fast-weight recurrent state carrying the full fold sequence ("muscle memory").</td><td>Does constant-latency full-rollout memory improve long-horizon phase tracking and recovery vs. frame-stacked history? <em>Greenlit only if the P1 history probe leaves residual phase confusion.</em></td></tr>
+        <tr class="deferred"><td>Deferred</td><td colspan="2">Spectral/coarse-to-fine head (CSP); hierarchical planner if phase confusion survives the memory phases (P1, P4).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="s7"><span class="num">7</span>Implementation</h2>
+  <p>We build on <span class="mono">openpi</span>. Three systems issues are notable and resolved on the <code>origami</code> branch.</p>
+  <p><span class="runin">65-DoF fine-tuning from a 32-DoF base.</span> The released <span class="mono">π0.5</span> checkpoint uses a 32-D padded action space, whereas the challenge action space is 65-D. We make the checkpoint merge shape-aware: the input/output action projections reinitialize (and are whitelisted for fresh init) while the rest of the pretrained backbone and expert load unchanged.</p>
+  <p><span class="runin">Per-session multi-dataset training.</span> The dataset is sharded into 143 per-session LeRobot datasets, and the pinned LeRobot is v2.1 with no aggregation utility. Rather than physically merge ~2.3 TB of video, we train jointly over all sessions via <code>MultiLeRobotDataset</code>: sessions are staged under a common root and discovered at load time, halving disk vs. a merge. A matching video-free wrapper skips decoding during normalization-statistic computation.</p>
+  <p><span class="runin">Compute.</span> Full fine-tuning of the ~3B model with MoH's multi-horizon batching is sharded across two 80 GB GPUs (FSDP). Held-out sessions provide the eval split.</p>
+
+  <h2 id="s8"><span class="num">8</span>Evaluation Protocol</h2>
+  <ul>
+    <li><span class="runin">Split.</span> Eight whole sessions, evenly spaced across the collection, held out for evaluation; the remaining 135 for training.</li>
+    <li><span class="runin">Primary metric.</span> Task success — a recognizable airplane — consistent with the challenge judging.</li>
+    <li><span class="runin">Diagnostic metric.</span> Per-fold drop-off: where in the six-fold sequence success degrades. A gradual decline indicates compounding drift (→ ACG, interventional data); a sharp failure at one transition indicates fold-phase confusion (→ observation history, escalating to gated TTT-layer memory [16] if frame-stacking is insufficient). Per-fold scoring requires segmenting held-out episodes — a separate labeling step.</li>
+    <li><span class="runin">Ablations.</span> Tactile on/off (P0); tokens vs. concatenation (P1); FVLMoE on/off (P2); ACG on/off (P3).</li>
+  </ul>
+
+  <h2 id="s9"><span class="num">9</span>Risks and Mitigations</h2>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 2.</b> Research risks and mitigation strategies.</caption>
+      <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>Tactile may not help in-state</td><td>P0 is explicitly a go/no-go; if negative, probe encoder-based tokenization (P1) before concluding tactile is unhelpful.</td></tr>
+        <tr><td>Data scarcity for a 65-DoF hand</td><td>Retain the pretrained backbone, keep new tactile parameters small, co-train across all sessions.</td></tr>
+        <tr><td>Long-horizon drift &amp; phase confusion</td><td>Mitigate drift with ACG and interventional data; mitigate phase confusion with a cheap-to-expensive observation-history ladder (frame history → gated TTT-layer memory → planner).</td></tr>
+        <tr><td>Cloth-prior domain gap</td><td>Treat garment-folding results as suggestive, validate on the target embodiment.</td></tr>
+        <tr><td>Recent-preprint dependence</td><td>Adopt only training-free or well-scoped components and ablate each rather than assume reported gains.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="s10"><span class="num">10</span>Conclusion</h2>
+  <p>Origami-MoH is a pragmatic, staged approach to autonomous bimanual origami: a <span class="mono">π0.5</span> flow policy made reactive by Mixture-of-Horizons and contact-aware by progressive tactile fusion, trained as a single vision-conditioned policy over a fixed fold sequence. The plan front-loads a cheap test of tactile value and escalates architectural investment only as evidence warrants.</p>
+  <div class="box"><span class="lead">Positioning statement.</span> Origami-MoH tests whether reactive multi-horizon action prediction and progressive tactile fusion make a flow-matching VLA competitive on rigid-crease bimanual origami, using a staged plan whose go/no-go criteria isolate the contribution of tactile sensing before the most elaborate fusion is built.</div>
+
+  <h2><span class="num">&nbsp;</span>References</h2>
+  <ol class="refs">
+    <li>Physical Intelligence. <span class="t">π0: A Vision-Language-Action Flow Model for General Robot Control.</span> 2024.</li>
+    <li>K. Black et al. <span class="t">π0.5: A VLA with Open-World Generalization.</span> arXiv:2504.16054, 2025.</li>
+    <li><span class="t">Mixture of Horizons in Action Chunking.</span> 2025.</li>
+    <li>K. Black et al. <span class="t">Real-Time Execution of Action Chunking Flow Policies.</span> arXiv:2506.07339, NeurIPS 2025.</li>
+    <li><span class="t">Action Coherence Guidance for Flow-based VLA Policies.</span> arXiv:2510.22201, ICRA 2026.</li>
+    <li><span class="t">ForceVLA: Force-Aware Mixture-of-Experts for Contact-Rich Manipulation.</span> arXiv:2505.22159, 2025.</li>
+    <li><span class="t">ViTacFormer: Cross-Modal Representations for Visuo-Tactile Dexterous Manipulation.</span> arXiv:2506.15953, 2025.</li>
+    <li><span class="t">3D-ViTac: Unified Visuo-Tactile Representations for Dexterous Manipulation.</span> arXiv:2410.24091, CoRL 2024.</li>
+    <li><span class="t">Tactile-VLA: Four-Modality Fusion with a Hybrid Position-Force Controller.</span> arXiv:2507.09160, 2025.</li>
+    <li>J. Gong et al. <span class="t">CARP: Coarse-to-Fine Autoregressive Prediction.</span> ICCV 2025.</li>
+    <li><span class="t">CF-VLA: Coarse-to-Fine Flow for VLA Models.</span> arXiv:2604.24622, 2026.</li>
+    <li><span class="t">Causal Spectral Policy: Frequency-Decomposed Action Prediction.</span> arXiv:2606.29570, 2026.</li>
+    <li>Physical Intelligence. <span class="t">FAST: Efficient Action Tokenization for VLA Models.</span> arXiv:2501.09747, 2025.</li>
+    <li>C. Chi et al. <span class="t">Diffusion Policy: Visuomotor Policy Learning via Action Diffusion.</span> RSS 2023.</li>
+    <li>T. Zhao et al. <span class="t">Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware (ACT/ALOHA).</span> RSS 2023.</li>
+    <li>NVIDIA GEAR. <span class="t">RoboTTT: Context Scaling for Robot Policies.</span> arXiv:2607.15275, 2026.</li>
+    <li><span class="t">DeMaVLA: A VLA Foundation Model for Generalizable Deformable Manipulation.</span> arXiv:2605.31286, 2026.</li>
+    <li>C. de Boor. <span class="t">A Practical Guide to Splines.</span> Springer, 1978.</li>
+  </ol>
+
+  <div class="foot">Axibo Robotics · Research proposal (living document) · Rendered from <code>docs/origami/proposal.tex</code>.</div>
+</article>
+</body>
+</html>

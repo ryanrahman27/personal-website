@@ -1,0 +1,7 @@
+# Claude-preview-only builds (generated; the real site is index.html + preprints/*.html)
+index_artifact.html
+preprints/*_artifact.html
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

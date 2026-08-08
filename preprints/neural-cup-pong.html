@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neural Cup Pong — Technical Report · Ryan Rahman</title>
+<meta name="description" content="Neural Cup Pong: a playable action-conditioned world model for 3D cup pong, by Ryan Rahman. A 409K-param GRU dynamics model and a 262K-param state-grounded decoder run the game with no engine or renderer in the loop.">
+<style>:root{color-scheme:light}html,body{margin:0}body{background:#ffffff;color:#1a1c22}img{max-width:100%}
+.backbar{max-width:44rem;margin:0 auto;padding:1.1rem 1.5rem 0;font:600 .8rem/1 ui-monospace,Consolas,monospace;letter-spacing:.04em;text-transform:uppercase}
+.backbar a{color:#b11226;text-decoration:none}.backbar a:hover{text-decoration:underline}</style>
+<style>
+  /* Plain professional preprint — mirrors the LaTeX PDF: white paper, serif type,
+     crimson used only for the eyebrow and links. Deliberately single (light) theme,
+     like a printed document. */
+  :root{
+    --paper:#ffffff; --ink:#1a1c22; --muted:#4b5563; --rule:#d1d5db;
+    --accent:#b11226; --boxbg:#f7f7f8; --boxline:#d1d5db;
+    --serif:"Latin Modern Roman",Georgia,"Times New Roman","Nimbus Roman",Times,serif;
+    --mono:"Latin Modern Mono","Cascadia Code",Consolas,ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--paper);color:var(--ink);margin:0;
+    font-family:var(--serif);font-size:17px;line-height:1.52;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:44rem;margin:0 auto;padding:3.5rem 1.5rem 5rem;}
+
+  /* masthead */
+  .masthead{text-align:center;margin-bottom:1.6rem;}
+  .eyebrow{font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:.9rem;}
+  h1.title{font-weight:700;font-size:1.95rem;line-height:1.2;margin:0 auto .6rem;
+    max-width:36rem;text-wrap:balance;}
+  .subtitle{font-size:1.02rem;color:var(--muted);margin:.3rem auto 1.1rem;max-width:34rem;line-height:1.4;}
+  .rule{width:70%;margin:1.1rem auto;border:0;border-top:.5px solid var(--rule);}
+  .byline{font-size:.98rem;}
+  .byline .name{font-weight:700;}
+  .byline .aff,.byline .date{color:var(--muted);font-size:.9rem;}
+  .byline .aff{display:block;margin-top:.15rem;}
+  .byline .date{display:block;margin-top:.05rem;}
+
+  /* callout box == \proposalbox */
+  .box{background:var(--boxbg);border:1px solid var(--boxline);border-radius:2px;
+    padding:.85rem 1.05rem;margin:1.5rem 0;font-size:.97rem;line-height:1.5;}
+  .box .lead{font-weight:700;}
+
+  /* contents */
+  .toc{margin:1.6rem 0 2.2rem;}
+  .toc .h{font-weight:700;font-size:1.05rem;margin-bottom:.4rem;}
+  .toc ol{margin:0;padding-left:1.6rem;columns:2;column-gap:2rem;font-size:.92rem;}
+  .toc li{margin:.12rem 0;}
+  .toc a{color:var(--ink);text-decoration:none;}
+  .toc a:hover{color:var(--accent);}
+
+  /* sections */
+  h2{font-weight:700;font-size:1.3rem;margin:2.2rem 0 .5rem;line-height:1.25;text-wrap:balance;}
+  h2 .num{margin-right:.6rem;}
+  h3{font-weight:700;font-size:1.04rem;margin:1.35rem 0 .25rem;}
+  h3 .num{margin-right:.5rem;color:var(--muted);font-weight:400;}
+  p{margin:.6rem 0;text-align:justify;hyphens:auto;}
+  .runin{font-weight:700;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  ul,ol.body-list{margin:.6rem 0;padding-left:1.4rem;}
+  li{margin:.28rem 0;}
+  code,.mono{font-family:var(--mono);font-size:.85em;}
+  var{font-style:italic;}
+
+  /* equations */
+  .eq{display:flex;align-items:center;gap:1rem;margin:1rem 0;overflow-x:auto;}
+  .eq .body{flex:1;text-align:center;white-space:nowrap;font-size:1.02rem;}
+  .eq .n{flex:none;color:var(--ink);font-size:.95rem;}
+  .op{color:var(--muted);}
+
+  /* figure */
+  figure{margin:1.8rem 0;text-align:center;}
+  .figbox{overflow-x:auto;padding:.4rem 0;}
+  figcaption{font-size:.86rem;line-height:1.45;color:var(--muted);margin-top:.7rem;
+    text-align:left;max-width:40rem;margin-left:auto;margin-right:auto;}
+  figcaption b{color:var(--ink);font-weight:700;}
+
+  /* tables (booktabs) */
+  .tablewrap{overflow-x:auto;margin:1.3rem 0;}
+  table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:34rem;line-height:1.4;}
+  caption{caption-side:top;text-align:left;font-size:.86rem;color:var(--muted);margin-bottom:.5rem;}
+  caption b{color:var(--ink);}
+  thead th{text-align:left;font-weight:700;padding:.45rem .7rem;
+    border-top:1.5px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom;}
+  tbody td{padding:.5rem .7rem;vertical-align:top;}
+  tbody tr:last-child td{border-bottom:1.5px solid var(--ink);}
+  tbody td:first-child{font-weight:700;white-space:nowrap;}
+  .deferred td{color:var(--muted);border-top:1px solid var(--rule);}
+
+  /* references */
+  ol.refs{font-size:.86rem;line-height:1.45;counter-reset:ref;list-style:none;padding-left:0;margin-top:.6rem;}
+  ol.refs li{counter-increment:ref;position:relative;padding-left:2.3rem;margin:.35rem 0;text-align:left;}
+  ol.refs li::before{content:"["counter(ref)"]";position:absolute;left:0;color:var(--ink);}
+  ol.refs .t{font-style:italic;}
+
+  .foot{margin-top:2.8rem;padding-top:.9rem;border-top:.5px solid var(--rule);
+    font-size:.8rem;color:var(--muted);text-align:center;}
+
+  @media (max-width:640px){
+    body{font-size:16px;}
+    h1.title{font-size:1.6rem;}
+    .toc ol{columns:1;}
+    .wrap{padding:2.5rem 1.1rem 3.5rem;}
+  }
+</style>
+</head>
+<body>
+<div class="backbar"><a href="../index.html">&larr; Ryan Rahman</a></div>
+<article class="wrap">
+  <div class="masthead">
+    <div class="eyebrow">Technical Report / Preprint</div>
+    <h1 class="title">Neural Cup Pong: A Playable Action-Conditioned World Model for 3D Cup Pong</h1>
+    <div class="subtitle">From a deterministic engine to a fully-generated, hand-controllable neural game, and the flight-precision wall in between.</div>
+    <hr class="rule" />
+    <div class="byline">
+      <span class="name">Ryan Rahman</span>
+      <span class="aff">University of Waterloo — Mechatronics Engineering / Robotics Research</span>
+      <span class="date">Technical report · <a href="https://github.com/ryanrahman27/neural-cup-pong" target="_blank" rel="noopener">code on GitHub</a></span>
+    </div>
+  </div>
+
+  <div class="box"><span class="lead">One-line summary.</span> A 409K-parameter GRU dynamics model plus a 262K-parameter state-grounded decoder together simulate and <em>render</em> an entire arcade cup-pong game from controller input, with no game engine and no graphics renderer in the loop. The ball's flight is the one place a small structured model cannot match ballistics, so a hybrid restores engine-parity sinking (6/6) while keeping control and rendering neural.</div>
+  <p style="font-size:.82rem;color:#555;margin:-0.2rem 0 0;">A hobby project. All art, physics, and assets are original; nothing here reproduces a commercial title.</p>
+
+  <nav class="toc">
+    <div class="h">Contents</div>
+    <ol>
+      <li><a href="#s1">Abstract</a></li>
+      <li><a href="#s2">Introduction</a></li>
+      <li><a href="#s3">The Game &amp; the Deterministic Engine</a></li>
+      <li><a href="#s4">Data Generation</a></li>
+      <li><a href="#s5">Structured Dynamics Model</a></li>
+      <li><a href="#s6">Training Curriculum &amp; Losses</a></li>
+      <li><a href="#s7">Neural Rendering (SGLR)</a></li>
+      <li><a href="#s8">Inference Modes</a></li>
+      <li><a href="#s9">Results</a></li>
+      <li><a href="#s10">The Flight-Precision Wall</a></li>
+      <li><a href="#s11">Discussion &amp; Future Work</a></li>
+      <li><a href="#s12">Conclusion</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="s1"><span class="num">1</span>Abstract</h2>
+  <p><em>World models</em> learn to predict how an environment evolves under an agent's actions, and a growing line of work asks whether such models can be run <em>as</em> the environment: a neural network the player controls directly, with no hand-written simulator or renderer [1,3,4,5]. This report documents a small, self-contained instance of that idea, <b>Neural Cup Pong</b>: a playable action-conditioned world model for an original 3D cup-pong game (aim, charge power, throw a ballistic ball at a triangular rack of six cups).</p>
+  <p>The system is built in six stages: (1) a deterministic, seeded game engine with a fixed-camera 2.5D projection; (2) a scripted data-generation pipeline; (3) a <em>structured</em> dynamics model, a gated recurrent network that predicts the next 21-dimensional game state from the current state and controller action, with a hard "snap" projection that keeps every prediction a legal game state; (4) engine-off inference, where the network alone advances the world; (5) a <em>state-grounded latent renderer</em> that paints each 128&times;96 frame from state using rasterized geometry hints and FiLM conditioning; and (6) fully-generated play, where both the engine and the graphics renderer are switched off and the two networks produce the game end-to-end.</p>
+  <p>The learned model is near-perfect at the parts that matter for feel: it tracks aim and power with one-step errors of 0.0025 and 0.0013 (normalized), reproduces phase transitions at 99.4% accuracy, and follows the player's controls with a 100% directional-response rate. It is <em>not</em> good at one specific thing: predicting exactly where a thrown ball lands. The GRU's predicted flight passes no closer than &asymp;8.4 table-units to the target cup, versus 0.31 for the engine (larger than a cup), so the fully-learned mode almost never sinks. We show this is a genuine capacity limit of a small structured model regressing a fast ballistic arc, not a training or class-imbalance artifact, and resolve it with a <em>hybrid</em> world model: the network keeps driving aim, power, and phase, but the ball's arc is integrated with exact ballistics seeded from the network's own (accurate) aim/power at release. The hybrid sinks 6/6 cups, matching the engine, while control stays neural and the decoder still renders every pixel.</p>
+
+  <h2 id="s2"><span class="num">2</span>Introduction</h2>
+  <h3><span class="num">2.1</span>Playable world models</h3>
+  <p>A world model is a learned simulator: given the current state (or observation) and an action, it predicts the next one. Classic formulations use them for imagination-based planning and reinforcement learning [1,2]. A more recent and more visceral use is to let a human drive the world model directly, turning it into a neural video game: GameNGen reproduces DOOM with a diffusion model [4], Genie learns controllable environments from video [5], and DIAMOND trains agents inside a diffusion world model of Atari [3]. These systems are impressive but heavy. This project asks the opposite question: <em>how small can a genuinely playable world model be, and what breaks first as you shrink it?</em></p>
+  <p>Cup pong is a deliberate choice. It is simple enough that a deterministic engine fits in a few hundred lines, yet it contains the three ingredients that make world modeling interesting: (i) <b>continuous control</b> (aim and power the player trims in real time), (ii) <b>a ballistic event</b> (a thrown ball whose landing is a sensitive function of the launch), and (iii) <b>discrete, irreversible state changes</b> (a cup is present or sunk; the rack only empties). The last two pull in opposite directions, and the tension between them is the story of this report.</p>
+  <h3><span class="num">2.2</span>Structured vs. pixel dynamics</h3>
+  <p>Rather than learn dynamics directly in pixel space, we separate concerns. A <em>structured</em> dynamics model predicts a compact, interpretable game state (ball position, cup bitmask, phase, and so on); a separate <em>neural renderer</em> turns state into pixels. This mirrors the "structured latent first" discipline used to make world models controllable and debuggable before committing to pixels, and it lets us measure exactly which faculty (dynamics or rendering) is responsible for any failure. It also means the two networks can be tiny: 409K and 262K parameters respectively.</p>
+  <h3><span class="num">2.3</span>Contributions</h3>
+  <ol class="body-list">
+    <li>A complete, six-stage recipe for a playable action-conditioned world model of an original arcade game, small enough to train on a single consumer GPU and run at interactive rates on CPU.</li>
+    <li>A <em>snap</em> projection operator that guarantees every learned state transition is legal (valid phase automaton, monotone cups, derived score, parked ball outside flight), used identically in training feedback and at inference.</li>
+    <li>A <em>state-grounded latent renderer</em> (SGLR) that reaches L<sub>1</sub> = 0.0077 reconstruction on held-out frames by feeding the decoder rasterized geometry hints plus a static court backdrop, rather than asking a conv net to invent the scene from a state vector.</li>
+    <li>A clean diagnosis of the <em>flight-precision wall</em>: a ~409K structured model tracks control to &asymp;0.002 but cannot localize a ballistic landing to within a cup radius (8.4u error), and no amount of loss re-weighting, event oversampling, or rule-based sink resolution fixes it because the predicted ball never reaches the cup.</li>
+    <li>A <em>hybrid</em> world model that restores engine-parity sinking (6/6) by integrating the ball's arc with exact ballistics seeded from the network's own aim/power, while leaving control and rendering fully neural: an honest, playable compromise and a concrete data point on what a small model should and should not be asked to learn.</li>
+  </ol>
+
+  <h2 id="s3"><span class="num">3</span>The Game and the Deterministic Engine</h2>
+  <h3><span class="num">3.1</span>Rules and camera</h3>
+  <p>The player faces a table. Table-space uses <var>x</var> across ([0,60]), <var>y</var> in depth toward the cups ([0,100]), and <var>z</var> up. Six cups sit in a triangular rack (rows of 3, 2, 1) at <var>y</var> &isin; {74, 82, 90}. The player trims a lateral aim <span class="mono">aim_x</span> &isin; [&minus;1,1] and a launch power <span class="mono">power</span> &isin; [0,1], then throws; the ball follows a fixed-elevation ballistic arc and either drops into a cup, rims out, or misses. Clearing all six cups wins. The engine renders with a <em>fixed-camera 2.5D projection</em>: a static perspective map from table-space (<var>x,y,z</var>) to a 128&times;96 frame. Because the camera never moves, the projection is a pure function &pi; : &#8477;<sup>3</sup> &rarr; &#8477;<sup>2</sup>, later ported to PyTorch to raster geometry hints for the neural renderer (verified bit-for-bit against the engine at 0.0px error).</p>
+  <h3><span class="num">3.2</span>State, action, and event spaces</h3>
+  <p>The world state is a 21-dimensional vector (Table 1); the controller action is a 5-dimensional multi-hot, <span class="mono">[aim_left, aim_right, power_up, power_down, throw]</span>; and the engine emits a 7-dimensional event vector per step, <span class="mono">[throw_released, cup_sunk, miss, table_bounce, rim_bounce, rack_cleared, game_over]</span>, used as an auxiliary training signal. Observations are decoupled from simulation: physics integrates at 60 Hz but the agent observes every third step (20 Hz), so a single learned step must summarize three physics ticks.</p>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 1.</b> The 21-dimensional structured game state <b>s</b>. The learned model predicts all of it.</caption>
+      <thead><tr><th>Field</th><th>Dim</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">ball_position</span></td><td>3</td><td>ball center (x, y, z) in table-space</td></tr>
+        <tr><td><span class="mono">ball_velocity</span></td><td>3</td><td>ball velocity</td></tr>
+        <tr><td><span class="mono">aim_x</span></td><td>1</td><td>lateral aim, [&minus;1,1]</td></tr>
+        <tr><td><span class="mono">power</span></td><td>1</td><td>charge, [0,1]</td></tr>
+        <tr><td><span class="mono">cups_present</span></td><td>6</td><td>per-cup bitmask, 1 present / 0 sunk (monotone)</td></tr>
+        <tr><td><span class="mono">score</span></td><td>1</td><td>cups sunk = 6 &minus; &sum; cups_present</td></tr>
+        <tr><td><span class="mono">throws_used</span></td><td>1</td><td>monotone throw counter</td></tr>
+        <tr><td><span class="mono">phase_onehot</span></td><td>4</td><td>AIM / FLIGHT / RESULT / GAME_OVER</td></tr>
+        <tr><td><span class="mono">result_timer</span></td><td>1</td><td>frozen frames left after a throw lands</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3><span class="num">3.3</span>Physics</h3>
+  <p>At release, the launch speed and direction are set from the trimmed controls:</p>
+  <div class="eq"><div class="body"><var>v</var><sub>0</sub> = POWER_MIN + power &middot; (POWER_MAX &minus; POWER_MIN), &nbsp; &theta; = aim_x &middot; MAX_AIM_ANGLE, &nbsp; &phi; = LAUNCH_ELEV</div><div class="n">(1)</div></div>
+  <p>giving initial velocity <b>v</b> = <var>v</var><sub>0</sub>(cos&phi; sin&theta;, cos&phi; cos&theta;, sin&phi;) from a fixed origin, with &phi; held constant so the throw is a one-parameter-per-axis family the player learns to feel. The ball then integrates under gravity:</p>
+  <div class="eq"><div class="body"><b>v</b> &larr; <b>v</b> &minus; <var>g</var> <b>ẑ</b> &Delta;<var>t</var>, &nbsp; <b>p</b> &larr; <b>p</b> + <b>v</b> &Delta;<var>t</var>, &nbsp; <var>g</var> = 200, &nbsp; &Delta;<var>t</var> = 1/60</div><div class="n">(2)</div></div>
+  <p>Cup interaction is resolved <em>only</em> at the descending crossing of the rim plane <var>z</var> = CUP_RIM_Z, the honest geometric definition of "over the cup on the way down." Let <var>d</var> be the distance from the ball to the nearest present cup center at that crossing:</p>
+  <ul class="body-list">
+    <li><b>make</b> if <var>d</var> &le; SINK_RADIUS = 3.3</li>
+    <li><b>rim-bounce</b> if SINK_RADIUS &lt; <var>d</var> &le; CUP_R + BALL_R (upward pop, outward kick)</li>
+    <li><b>pass</b> otherwise (then test the table for a miss)</li>
+  </ul>
+  <p>The forgiving SINK_RADIUS (&lt; CUP_R = 4.0) makes "visibly over the cup" drop, which matters greatly once a <em>learned</em> ball has to hit it.</p>
+
+  <h2 id="s4"><span class="num">4</span>Data Generation</h2>
+  <p>Trajectories are generated by a deterministic scripted thrower. It caches an (<span class="mono">aim_x</span>, <span class="mono">power</span>) &rarr; landing table by simulating the engine's ballistics on a 41&times;41 grid, selects the grid cell whose true landing is nearest a chosen present cup, and drives the aim/power controls toward it with a skill-scaled jitter so the dataset contains a realistic mix of makes, rims, and misses. Each episode records the full (<b>s</b><sub>t</sub>, <b>a</b><sub>t</sub>, events<sub>t</sub>) stream and, optionally, rendered frames for the visual stage. Because the thrower is seeded, the entire dataset is reproducible from an integer.</p>
+
+  <h2 id="s5"><span class="num">5</span>Structured Dynamics Model</h2>
+  <h3><span class="num">5.1</span>Architecture</h3>
+  <p>The dynamics model is a gated recurrent network [6] with a per-field decoder head:</p>
+  <div class="eq"><div class="body"><b>x</b><sub>t</sub> = enc([<b>s</b><sub>t</sub>, <b>a</b><sub>t</sub>]), &nbsp; <b>h</b><sub>t</sub> = GRU(<b>x</b><sub>t</sub>, <b>h</b><sub>t&minus;1</sub>)</div><div class="n">(3)</div></div>
+  <p>From <b>h</b><sub>t</sub>, four heads predict the next state: a continuous head (11 dims: position, velocity, aim, power, score, throws, timer), a cups head (6 logits), a phase head (4 logits), and an auxiliary event head (7 logits). The full model is 408,860 parameters. A key modeling choice is <em>what</em> each continuous field predicts. Slowly-drifting quantities (position, aim, power, the counters) are predicted as <b>deltas</b> added to the current value, keeping the network near identity and stabilizing long rollouts; <b>velocity is predicted absolutely</b>, because during flight it changes by a large, near-constant gravitational increment each step that is easier to name outright than to correct incrementally.</p>
+  <h3><span class="num">5.2</span>The snap projection</h3>
+  <p>A raw regression head will happily predict a cup that un-sinks, a fractional throw counter, or an illegal AIM &rarr; GAME_OVER jump. We forbid this with a hard projection operator &Pi; (<span class="mono">snap</span>) applied to every predicted next-state, identically in training feedback and at inference:</p>
+  <div class="eq"><div class="body">ŝ<sub>t+1</sub> = &Pi;( <b>s</b><sub>t</sub>, heads(<b>h</b><sub>t</sub>) )</div><div class="n">(4)</div></div>
+  <p>&Pi; enforces: (i) a legal phase transition, masking phase logits by an automaton adjacency matrix before the argmax; (ii) <em>monotone</em> cups (a present cup may sink but a sunk cup never returns); (iii) score = 6 &minus; &sum; cups, derived not predicted; (iv) a rounded, monotone throw counter; (v) bounded aim/power/z/timer; and (vi) phase-conditioned <em>parking</em>: outside FLIGHT the ball is snapped to the throw origin with zero velocity. Snap turns a noisy real-valued prediction into a guaranteed-legal game state, which is what keeps engine-off rollouts coherent for hundreds of steps.</p>
+
+  <h2 id="s6"><span class="num">6</span>Training Curriculum and Losses</h2>
+  <p>Training uses a two-phase curriculum. <b>Teacher forcing</b> first fits local dynamics: the model sees ground-truth states and predicts one step ahead, which converges fast and nails aim/power/phase. <b>Scheduled sampling</b> [7] then fights exposure bias: the model is fed its own snap-projected predictions with probability 1 &minus; <var>p</var>, annealed over training, so it learns to recover from its own small errors. We warm the hidden state on a short ground-truth burn-in, then free-run a 24-step horizon; a gentle schedule (final teacher-forcing probability 0.4) was necessary, as more aggressive free-running destabilized the ballistic parts of the rollout. The per-field loss is a weighted Huber in normalized space for the continuous head, BCE for cups and events, and cross-entropy for phase:</p>
+  <div class="eq"><div class="body">&#8466; = &Vert; <var>w</var> &odot; Huber(ĉ, c) &Vert; + &lambda;<sub>cups</sub> &#8466;<sub>cups</sub> + &lambda;<sub>phase</sub> &#8466;<sub>phase</sub> + &lambda;<sub>event</sub> &#8466;<sub>event</sub></div><div class="n">(5)</div></div>
+  <p>A <em>motion</em> mask upweights moving/flight frames (where position error compounds along the arc) and a <em>transition</em> mask upweights the sparse throw/sink/land ticks. Because a cup-sink is a rare one-tick 1 &rarr; 0 flip, the cups BCE additionally upweights flip frames and we oversample sink windows in the batch sampler. As Section 10 shows, these help the head fire but cannot by themselves make the game sink, because the problem lies upstream in the predicted ball.</p>
+
+  <h2 id="s7"><span class="num">7</span>Neural Rendering: The State-Grounded Latent Renderer</h2>
+  <p>The visual stage learns <b>s</b> &rarr; frame so the game can be drawn without the engine's renderer. A conv decoder asked to invent a 128&times;96 scene from a 21-vector produces blotchy felt and garbled HUD text. The fix is to <em>ground</em> the decoder in geometry it should not have to hallucinate. We rasterize the state into a stack of 16 hint channels using the PyTorch port of the camera projection: Gaussian blobs for the ball and its shadow, filled disks for each <em>present</em> cup (gated by the bitmask), the aim reticle and power bar, a phase one-hot broadcast, and, crucially, three channels of a <em>static empty-court backdrop</em>. The decoder is a small upsampling conv net (261,891 parameters) with FiLM conditioning [8] from the state vector, trained with a <em>foreground-weighted</em> L<sub>1</sub> loss. Adding the backdrop hint channels alone cut held-out reconstruction from L<sub>1</sub> = 0.048 to <b>0.0077</b>.</p>
+
+  <h2 id="s8"><span class="num">8</span>Inference Modes</h2>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 2.</b> What is real and what is neural in each play mode.</caption>
+      <thead><tr><th>Mode</th><th>World dynamics</th><th>Rendering</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>F1</td><td>deterministic engine</td><td>engine renderer</td><td>ground-truth reference</td></tr>
+        <tr><td>F2</td><td><b>GRU</b> (engine off)</td><td>engine renderer</td><td>pure learned-dynamics demo</td></tr>
+        <tr><td>F3</td><td><b>hybrid</b> (engine off)</td><td><b>neural decoder</b> (renderer off)</td><td>fully-generated, playable</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>In F2 the network alone advances the structured state under live controller input; in F3 both the engine and its renderer are off and the game you see and play is produced entirely by the two networks. The controls, HUD, and win condition are identical across modes.</p>
+
+  <h2 id="s9"><span class="num">9</span>Results</h2>
+  <h3><span class="num">9.1</span>Control and short-horizon dynamics</h3>
+  <p>On held-out seeds the learned dynamics is excellent at everything except ballistic landing (Table 3). One-step aim and power errors are 0.0025 and 0.0013 on their [&minus;1,1] / [0,1] scales; phase transitions are 99.4% correct; the throw counter is exact; and controllability (does the world move the way the button says?) is a perfect 100% directional-response rate for aim, power, and throw-launch. Subjectively this is what makes F2/F3 feel like the game rather than like a video of it.</p>
+  <div class="tablewrap">
+    <table>
+      <caption><b>Table 3.</b> Learned-model evaluation (held-out seeds). Position error in table-units; aim/power on normalized control scales.</caption>
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Dynamics GRU parameters</td><td>408,860</td></tr>
+        <tr><td>Neural decoder parameters</td><td>261,891</td></tr>
+        <tr><td>One-step position RMSE</td><td>0.887 u</td></tr>
+        <tr><td>One-step aim / power MAE</td><td>0.0025 / 0.0013</td></tr>
+        <tr><td>One-step cups / phase accuracy</td><td>0.998 / 0.994</td></tr>
+        <tr><td>One-step throw-count exactness</td><td>1.000</td></tr>
+        <tr><td>Controllability (aim / power / throw dir-rate)</td><td>1.00 / 1.00 / 1.00</td></tr>
+        <tr><td>Rollout position RMSE @ H = 5 / 10 / 30</td><td>5.2 / 8.3 / 22.4 u</td></tr>
+        <tr><td>Median steps until divergence</td><td>14</td></tr>
+        <tr><td>Legal-state (invariant) rate over rollout</td><td>1.00</td></tr>
+        <tr><td>Whole-game score MAE vs. engine</td><td>2.8</td></tr>
+        <tr><td>Decoder held-out L<sub>1</sub> (with backdrop hints)</td><td>0.0077</td></tr>
+        <tr><td>Camera-projection port error vs. engine</td><td>0.0 px</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3><span class="num">9.2</span>Long-horizon drift</h3>
+  <p>Free-run rollouts stay <em>legal</em> indefinitely (snap guarantees it: invariant rate 1.00) but drift in continuous value: positional RMSE grows to &asymp;22u by 30 steps, and the median trajectory measurably diverges from the engine's after ~14 steps. The whole-game score MAE against the engine is &asymp;2.8 cups. The dominant contributor to that drift is exactly the flight phase.</p>
+
+  <h2 id="s10"><span class="num">10</span>The Flight-Precision Wall</h2>
+  <p><b>Symptom.</b> Played in F2/F3, the game felt right until you tried to <em>score</em>: the ball would arc plausibly and the felt, cups, and HUD all rendered cleanly, but cups almost never sank. Instrumenting the make-rate confirmed it: the fully-learned mode sank roughly 3% of well-aimed throws, against the engine's 100%.</p>
+  <p><b>Diagnosis.</b> We first blamed the sink resolution and attacked it three ways: upweighting the rare cup-flip in the BCE by 25&times;; oversampling sink windows; and adding a rule-based sink to the snap operator that drops a cup whenever the model's <em>predicted</em> descending ball passes within SINK_RADIUS of a present cup. None moved the make-rate. Tracing an individual throw explained why:</p>
+  <div class="box"><span class="lead">Root cause.</span> With the bot aiming dead-on a cup at (30, 90), the <em>engine's</em> ball passes 0.31 u from the cup center at the rim plane, a clean make. The <em>GRU's predicted</em> ball, given the same intent, never gets closer than <b>8.4 u</b>. The predicted arc looks reasonable (z rises to ~37 and falls) but its <em>landing</em> is off by more than a cup diameter. The ball simply is not at the cup, so no sink head, loss weight, or snap rule can drop it.</div>
+  <p>This is a capacity limit, not a bug. Localizing a 60 Hz ballistic landing over an ~85-unit throw to within a 3.3-unit radius demands that a 409K recurrent model integrate a fast arc almost exactly, and small errors in the predicted launch velocity, compounded over the flight, land well outside the cup. The same model that tracks aim to 0.0025 cannot pin the landing, because landing precision is a far harder function of the launch than direction-following is.</p>
+  <p><b>Fix: the hybrid world model.</b> The resolution keeps the network where it is strong and defers to physics where it is weak. At release, the ball's velocity is seeded from the network's <em>own</em> aim and power (which it tracks to &asymp;0.002, so the seed is accurate) and the arc is integrated with exact, deterministic ballistics and the sink test, while the GRU keeps driving aim, power, and the phase machine, and the decoder keeps rendering:</p>
+  <div class="eq"><div class="body">aim, power, phase&nbsp;<span style="color:#555">[neural GRU]</span> &rarr; ballistic arc + sink/miss&nbsp;<span style="color:#555">[exact physics, seeded from neural control]</span> &rarr; pixels&nbsp;<span style="color:#555">[neural decoder]</span></div><div class="n">(6)</div></div>
+  <p>This "hybrid flight" mode (F3) sinks <b>6/6</b> cups, matching the engine exactly, and a regression test locks in engine-parity sinking for every cup in the rack. The pure-learned F2 mode is retained as the honest artifact: it shows what the structured dynamics does and does not learn, flight wall included. The concession is stated plainly: in F3 the ball's <em>arc</em> is real physics, not learned; everything else is neural, including the interactive control loop, the phase/score logic, and 100% of the pixels.</p>
+
+  <h2 id="s11"><span class="num">11</span>Discussion, Limitations, and Future Work</h2>
+  <ul class="body-list">
+    <li><b>The wall is the finding.</b> The interesting result is not that a tiny world model works; it is precisely <em>where</em> it stops working. Control-following and discrete state logic are cheap to learn; sub-cup ballistic localization is not. A world model's weakest link is whichever variable is a sensitive, compounding function of an early continuous choice.</li>
+    <li><b>Could a pure model clear the wall?</b> Plausibly, via a launch-velocity representation that predicts the whole arc from release conditions in closed form rather than integrating step-by-step, or simply more capacity. Both are worth trying, but neither is "small."</li>
+    <li><b>Rendering is the easy, satisfying part.</b> The state-grounded decoder felt most like magic and was least troublesome, because geometry hints do the heavy lifting; the network only has to shade and antialias.</li>
+    <li><b>Drift.</b> Even with legal-state guarantees, continuous drift over long rollouts remains; a learned correction term or periodic re-grounding could extend coherent horizons.</li>
+  </ul>
+
+  <h2 id="s12"><span class="num">12</span>Conclusion</h2>
+  <p>Neural Cup Pong is a fully playable arcade game in which, at the strongest setting, no game engine and no graphics renderer run: a 409K-parameter recurrent dynamics model driven by a legality-preserving projection handles control and state, and a 262K-parameter state-grounded decoder paints every frame. The build is honest about its one hard limit, that a small structured model cannot localize a ballistic landing to within a cup, and resolves it with a hybrid that seeds exact flight from the network's own accurate control, restoring engine-parity sinking while keeping control and rendering neural. The lesson generalizes past cup pong: when you shrink a world model, the first thing to break is the variable that is a sensitive, compounding function of a continuous action, and the pragmatic fix is to learn everything else and hand that one variable back to physics.</p>
+
+  <h2><span class="num">&nbsp;</span>References</h2>
+  <ol class="refs">
+    <li>D. Ha, J. Schmidhuber. <span class="t">World Models.</span> 2018. arXiv:1803.10122.</li>
+    <li>D. Hafner, J. Pasukonis, J. Ba, T. Lillicrap. <span class="t">Mastering Diverse Domains through World Models (DreamerV3).</span> 2023. arXiv:2301.04104.</li>
+    <li>E. Alonso, A. Jelley, V. Micheli et al. <span class="t">Diffusion for World Modeling: Visual Details Matter in Atari (DIAMOND).</span> NeurIPS 2024. arXiv:2405.12399.</li>
+    <li>D. Valevski, Y. Leviathan, M. Arar, S. Fruchter. <span class="t">Diffusion Models Are Real-Time Game Engines (GameNGen).</span> 2024. arXiv:2408.14837.</li>
+    <li>J. Bruce, M. Dennis, A. Edwards, J. Parker-Holder et al. <span class="t">Genie: Generative Interactive Environments.</span> ICML 2024. arXiv:2402.15391.</li>
+    <li>K. Cho, B. van Merriënboer, C. Gulcehre et al. <span class="t">Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation (GRU).</span> EMNLP 2014. arXiv:1406.1078.</li>
+    <li>S. Bengio, O. Vinyals, N. Jaitly, N. Shazeer. <span class="t">Scheduled Sampling for Sequence Prediction with Recurrent Neural Networks.</span> NeurIPS 2015. arXiv:1506.03099.</li>
+    <li>E. Perez, F. Strub, H. de Vries, V. Dumoulin, A. Courville. <span class="t">FiLM: Visual Reasoning with a General Conditioning Layer.</span> AAAI 2018. arXiv:1709.07871.</li>
+  </ol>
+
+  <div class="foot">Ryan Rahman · Technical report · Code: <a href="https://github.com/ryanrahman27/neural-cup-pong" target="_blank" rel="noopener">github.com/ryanrahman27/neural-cup-pong</a></div>
+</article>
+</body>
+</html>

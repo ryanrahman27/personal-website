@@ -527,7 +527,16 @@
 
     <!-- ================= PREPRINTS ================= -->
     <section id="preprints" class="panel" role="tabpanel" aria-labelledby="tab-preprints" hidden>
-      <p>Ongoing research I'm actively developing. Each is a living document; the full write-up (figures, equations, tables, and references) is linked below.</p>
+      <p>Research I'm developing and technical reports I've written. The full write-up (figures, equations, tables, and references) is linked from each.</p>
+
+      <div class="preprint">
+        <p class="status">Technical report · world models</p>
+        <h3>Neural Cup Pong: A Playable Action-Conditioned World Model</h3>
+        <p class="q">How small can a genuinely playable world model be, and what breaks first as you shrink it?</p>
+        <p class="body">A 409K-parameter GRU dynamics model and a 262K-parameter state-grounded decoder run an entire 3D cup-pong game from controller input, with no game engine and no graphics renderer in the loop. The learned model nails control (aim/power errors ~0.002, 99.4% phase accuracy, 100% directional response) but hits a "flight-precision wall": a small structured model cannot localize a ballistic landing to within a cup radius. A hybrid seeds exact flight from the network's own accurate control, restoring engine-parity sinking (6/6) while control and rendering stay fully neural.</p>
+        <div class="tags"><span class="tag">world models</span><span class="tag">GRU dynamics</span><span class="tag">neural rendering</span><span class="tag">PyTorch</span></div>
+        <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/neural-cup-pong.html">Read the report →</a> &nbsp;·&nbsp; <a class="readlink" href="https://github.com/ryanrahman27/neural-cup-pong" target="_blank" rel="noopener">Code</a></p>
+      </div>
 
       <div class="preprint">
         <p class="status">Research proposal · study in progress</p>

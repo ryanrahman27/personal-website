@@ -58,6 +58,13 @@
   .byline .sep{ color:#ccc; }
   .byline .affil{ color:var(--muted); }
 
+  /* ---------- About ---------- */
+  .about{ display:flex; gap:1.8rem; align-items:flex-start; }
+  .about-photo{ flex:0 0 210px; width:210px; height:auto; border:1px solid var(--rule); border-radius:4px; display:block; }
+  .about-text{ flex:1 1 0; min-width:0; }
+  .about-text .subtitle{ margin-top:0; }
+  @media (max-width:36rem){ .about{ flex-direction:column; gap:1.2rem; } .about-photo{ width:170px; flex-basis:auto; } }
+
   /* ---------- Sections / panels ---------- */
   main{ margin:0; }
   section.panel{ margin-top:1.6rem; }
@@ -164,32 +171,38 @@
   <div class="header">
     <h1 class="brand">Ryan Rahman</h1>
     <nav class="tabs" role="tablist" aria-label="Sections">
-      <button class="tab" role="tab" id="tab-experience" data-tab="experience" aria-controls="experience" aria-selected="true">Experience</button>
+      <button class="tab" role="tab" id="tab-about" data-tab="about" aria-controls="about" aria-selected="true">About</button>
+      <button class="tab" role="tab" id="tab-experience" data-tab="experience" aria-controls="experience" aria-selected="false">Experience</button>
       <button class="tab" role="tab" id="tab-research" data-tab="research" aria-controls="research" aria-selected="false">Research</button>
       <button class="tab" role="tab" id="tab-preprints" data-tab="preprints" aria-controls="preprints" aria-selected="false">Preprints</button>
       <button class="tab" role="tab" id="tab-discussion" data-tab="discussion" aria-controls="discussion" aria-selected="false">Discussion</button>
     </nav>
   </div>
 
-  <!-- ================= INTRO ================= -->
-  <div class="intro">
-    <p class="subtitle">Teaching robots to perceive, reason, and act in the real world.</p>
-    <div class="abstract">
-      <p>Mechatronics Engineering + AI at the University of Waterloo, working on foundational models and robot learning for manipulation. Currently a Research Engineer at <b>AXIBO</b> under <a href="https://scholar.google.ca/citations?user=HJDUjeIAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Vidyasagar Rajendran</b></a>, and an accelerated <b>MASc</b> researcher in robotics at Waterloo under <a href="https://scholar.google.com/citations?user=_gfwCNwAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Stephen L. Smith</b></a>.</p>
-    </div>
-    <nav class="byline">
-      <span>Email: <a href="mailto:r8rahman@uwaterloo.ca">r8rahman@uwaterloo.ca</a></span>
-      <span class="sep">·</span>
-      <a href="https://www.linkedin.com/in/ryan-rahman27/" target="_blank" rel="noopener">LinkedIn</a>
-      <span class="sep">·</span>
-      <a href="https://github.com/ryanrahman27" target="_blank" rel="noopener">GitHub</a>
-    </nav>
-  </div>
-
   <main>
 
+    <!-- ================= ABOUT ================= -->
+    <section id="about" class="panel" role="tabpanel" aria-labelledby="tab-about">
+      <div class="about">
+        <img class="about-photo" src="assets/ryan.jpg" alt="Ryan Rahman" onerror="this.style.display='none'" />
+        <div class="about-text">
+          <p class="subtitle">Teaching robots to perceive, reason, and act in the real world.</p>
+          <div class="abstract">
+            <p>Mechatronics Engineering + AI at the University of Waterloo, working on foundational models and robot learning for manipulation. Currently a Research Engineer at <b>AXIBO</b> under <a href="https://scholar.google.ca/citations?user=HJDUjeIAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Vidyasagar Rajendran</b></a>, and an accelerated <b>MASc</b> researcher in robotics at Waterloo under <a href="https://scholar.google.com/citations?user=_gfwCNwAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Stephen L. Smith</b></a>.</p>
+          </div>
+          <nav class="byline">
+            <span>Email: <a href="mailto:r8rahman@uwaterloo.ca">r8rahman@uwaterloo.ca</a></span>
+            <span class="sep">·</span>
+            <a href="https://www.linkedin.com/in/ryan-rahman27/" target="_blank" rel="noopener">LinkedIn</a>
+            <span class="sep">·</span>
+            <a href="https://github.com/ryanrahman27" target="_blank" rel="noopener">GitHub</a>
+          </nav>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= EXPERIENCE ================= -->
-    <section id="experience" class="panel" role="tabpanel" aria-labelledby="tab-experience">
+    <section id="experience" class="panel" role="tabpanel" aria-labelledby="tab-experience" hidden>
 
       <div class="entry">
         <p class="sidenote"><b>Amazon</b><br>Texas, US · Hybrid<br>Aug 2026 – present</p>
@@ -568,7 +581,7 @@
   });
 
   window.addEventListener('hashchange', function () { activate(location.hash.slice(1), true); });
-  activate(location.hash.slice(1) || 'experience', false);
+  activate(location.hash.slice(1) || 'about', false);
 </script>
 </body>
 </html>

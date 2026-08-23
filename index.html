@@ -96,6 +96,7 @@
   .plate{ background:var(--soft); border:1px solid var(--rule); border-radius:4px; padding:18px 16px; overflow-x:auto; }
   figcaption{ font-size:13px; color:var(--muted); margin-top:8px; line-height:1.5; }
   figcaption b{ color:#555; font-weight:600; }
+  figure video.vid{ width:100%; height:auto; display:block; border:1px solid var(--rule); border-radius:4px; background:#000; }
   .flow{ display:flex; align-items:stretch; gap:.5rem; min-width:max-content; }
   .flow.col{ flex-direction:column; min-width:0; }
   .node{ flex:1 1 0; min-width:8.5rem; background:#fff; border:1px solid var(--rule); border-radius:4px; padding:.65rem .7rem; display:flex; flex-direction:column; gap:.15rem; justify-content:center; }
@@ -249,10 +250,27 @@
 
     <!-- ================= RESEARCH ================= -->
     <section id="research" class="panel" role="tabpanel" aria-labelledby="tab-research" hidden>
-      <p>Three tracks from my work at AXIBO. Each pairs a published method with a concrete engineering problem on a real robot; the figures redraw the deployed architecture.</p>
+      <p>Projects across my research. Most are from my work at AXIBO, each pairing a published method with a concrete engineering problem on a real robot; the figures redraw the deployed architecture.</p>
 
-      <!-- 2.1 Junior -->
-      <h3 class="sub"><span class="no">1</span> A Deployed Bimanual Manipulation Policy Stack: <i>Junior</i></h3>
+      <!-- Origami (IROS 2026) -->
+      <h3 class="sub"><span class="no">1</span> Bimanual Dexterous Origami: the IROS 2026 Robotic Origami Challenge</h3>
+      <p class="sidenote"><b>Proposal</b><br><a class="ref" href="preprints/origami-moh.html">Read Origami-MoH &rarr;</a></p>
+      <p>For the IROS 2026 Robotic Origami Challenge, I'm developing autonomous paper folding on a 65-DoF bimanual dexterous platform with rich tactile sensing. The approach makes a <b>π0.5</b> flow policy <b>reactive</b> (multi-horizon action prediction with disagreement-based replanning) and <b>contact-aware</b> (progressive tactile fusion, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder), trained as a single vision-conditioned policy over a fixed six-fold sequence.</p>
+
+      <figure>
+        <video class="vid" src="assets/origami.mp4" controls muted loop playsinline preload="metadata"></video>
+        <figcaption><b>Origami-MoH.</b> Bimanual dexterous manipulation hardware for the challenge. The full method, staged Phase 0–4 plan, and go/no-go criteria are in the <a class="ref" href="preprints/origami-moh.html">Origami-MoH proposal</a>.</figcaption>
+      </figure>
+
+      <div class="stats">
+        <div class="stat"><div class="v">65-DoF</div><div class="k">Bimanual dexterous</div></div>
+        <div class="stat"><div class="v">MoH</div><div class="k">Reactive multi-horizon</div></div>
+        <div class="stat"><div class="v">Tactile</div><div class="k">Progressive fusion</div></div>
+        <div class="stat"><div class="v">IROS 2026</div><div class="k">Origami Challenge</div></div>
+      </div>
+
+      <!-- Junior -->
+      <h3 class="sub"><span class="no">2</span> A Deployed Bimanual Manipulation Policy Stack: <i>Junior</i></h3>
       <p class="sidenote"><b>Role</b><br>End-to-end ownership: demo-collection hardware → policy training → closed-loop deployment on Junior's dual arms.</p>
 
       <figure class="photo-fig">
@@ -291,7 +309,7 @@
       </div>
 
       <!-- 2.2 DSRL -->
-      <h3 class="sub"><span class="no">2</span> Noise-Space RL Fine-Tuning of Flow-Matching Policies</h3>
+      <h3 class="sub"><span class="no">3</span> Noise-Space RL Fine-Tuning of Flow-Matching Policies</h3>
       <p class="sidenote"><b>Basis</b><br>DSRL: <i>Steering Your Diffusion Policy with Latent Space Reinforcement Learning</i>, Wagenmaker et al., CoRL 2025.</p>
       <p>Fine-tuning a diffusion or flow policy's weights with RL is unstable and demands full access to model internals, while behavior-cloned policies plateau without costly additional demonstrations. DSRL sidesteps both: instead of updating weights, it trains a small RL agent to select the <b>noise seed</b> that initializes denoising, steering a frozen, black-box base policy toward better behavior.</p>
       <p>I applied DSRL-style noise-space RL to our deployed VLA policy's action head, training a lightweight SAC agent (~500K parameters) to pick the seed that steers the frozen base policy. Because RL runs over the latent-noise space, never through the denoiser, so no gradients touch the base weights and no model internals are required. This post-training contributed to a <b>30% manipulation-performance gain over imitation baselines</b>, adapting a frozen policy without modifying its weights or collecting extra demonstrations.</p>
@@ -319,7 +337,7 @@
       </div>
 
       <!-- 2.3 Latent WAM -->
-      <h3 class="sub"><span class="no">3</span> Latent World-Action Models (VLA-JEPA)</h3>
+      <h3 class="sub"><span class="no">4</span> Latent World-Action Models (VLA-JEPA)</h3>
       <p class="sidenote"><b>Basis</b><br>VLA-JEPA: <i>Enhancing Vision-Language-Action Models with a Latent World Model</i>, Sun et al., 2026.</p>
       <p>Standard VLA policies map observations directly to actions without modeling how the scene will evolve, and pixel-space prediction is brittle to appearance and camera changes. Following VLA-JEPA, I built action-conditioned latent world-action models that predict future <b>latent</b> states rather than pixels, a leakage-free formulation in which future frames are only ever targets, never inputs.</p>
       <p>The model encodes the current observation plus action context into a latent representation and predicts 10-step, action-conditioned latent dynamics with no pixel reconstruction. A two-stage recipe (JEPA-style pretraining followed by action-head fine-tuning) integrates the predicted latent rollouts with downstream VLA action heads. I evaluated rollout consistency across manipulation trajectories to assess temporal coherence of the learned dynamics.</p>

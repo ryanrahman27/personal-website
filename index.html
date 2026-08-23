@@ -256,6 +256,7 @@
       <h3 class="sub"><span class="no">1</span> Bimanual Dexterous Origami: the IROS 2026 Robotic Origami Challenge</h3>
       <p class="sidenote"><b>Proposal</b><br><a class="ref" href="preprints/origami-moh.html">Read Origami-MoH &rarr;</a></p>
       <p>For the IROS 2026 Robotic Origami Challenge, I'm developing autonomous paper folding on a 65-DoF bimanual dexterous platform with rich tactile sensing. The approach makes a <b>π0.5</b> flow policy <b>reactive</b> (multi-horizon action prediction with disagreement-based replanning) and <b>contact-aware</b> (progressive tactile fusion, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder), trained as a single vision-conditioned policy over a fixed six-fold sequence.</p>
+      <p>To tackle the long-horizon problem, I <b>segment demonstrations over their temporal shape</b> into contact-delimited subgoals, then train the model to <b>predict the next subgoal state from proprioception and tactile alone</b> (no vision). This decomposes the minutes-long fold into short, individually verifiable steps and gives the policy intermediate targets that stay reliable exactly when the crease self-occludes the camera.</p>
 
       <figure>
         <video class="vid" src="assets/origami.mp4" controls muted loop playsinline preload="metadata"></video>

@@ -418,12 +418,12 @@
       </div>
 
       <div class="preprint">
-        <p class="status">Research proposal · study in progress</p>
-        <h3>Diffusion-Trained Multimodal Backbones for Action-Token Representations in Flow-Matching VLA Policies</h3>
-        <p class="q">Does a diffusion-trained bidirectional multimodal backbone produce better action-token hidden states than a causal/autoregressive VLM backbone when both use the same flow-matching action expert?</p>
-        <p class="body">A controlled study on the LIBERO benchmark that isolates the backbone as the only variable: it swaps Dream-7B (discrete-diffusion) for Qwen2.5-7B, its own autoregressive base, under one shared flow-matching action expert. Because the two backbones share initialization and architecture and differ chiefly in training objective, the C&minus;D contrast identifies the effect of the diffusion pretraining <i>prior</i> rather than scale or data. Beyond rollout success, I probe the action-token hidden states directly against simulator ground truth to test whether the diffusion prior organizes trajectory phase, contact timing, and subtask ordering better.</p>
+        <p class="status">Preprint · results</p>
+        <h3>Diffusion-Trained Backbones for Flow-Matching VLA Policies</h3>
+        <p class="q">Does a diffusion-trained backbone produce better action-token hidden states than a matched autoregressive one when both drive the same flow-matching action expert?</p>
+        <p class="body">A controlled LIBERO study isolating the pretraining prior with a matched pair: Dream-7B (diffusion) vs. Qwen2.5-7B, its own autoregressive base, driving one shared flow-matching expert. The diffusion-trained backbone improves mean LIBERO success by <b>+5.9 points</b> (82.2 vs. 76.3), concentrated on the long-horizon (+12.0) and object (+11.2) suites where the AR backbone is weakest, and a tie on the near-ceiling suites. Linear probing finds the two equally decodable for low-level action, state, and gripper targets, so the behavioral gain does not reduce to the linear readability of immediate control. Single-seed, simulation-only; a controlled existence proof.</p>
         <div class="tags"><span class="tag">π0.5 / OpenPI</span><span class="tag">flow matching</span><span class="tag">LIBERO</span><span class="tag">representation probing</span></div>
-        <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/diffusion-vla.html">Read the proposal →</a></p>
+        <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/diffusion-vla.html">Read the paper →</a></p>
       </div>
 
       <div class="preprint">

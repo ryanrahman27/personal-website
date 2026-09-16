@@ -208,7 +208,7 @@
       <div class="entry">
         <p class="sidenote"><b>Preload</b><br>San Francisco, CA · On-site<br>Sep 2026 – present</p>
         <p class="role">Founding Research Engineer</p>
-        <p class="org">Preload <span class="dot">·</span> Stealth startup</p>
+        <p class="org"><a href="https://preload.ai/" target="_blank" rel="noopener">Preload</a> <span class="dot">·</span> Stealth startup</p>
         <p class="desc">YC F26.</p>
       </div>
 
@@ -379,6 +379,28 @@
         <div class="stat"><div class="v">Latent</div><div class="k">Not pixel targets</div></div>
         <div class="stat"><div class="v">2-stage</div><div class="k">Pretrain → fine-tune</div></div>
         <div class="stat"><div class="v">Leakage-free</div><div class="k">State prediction</div></div>
+      </div>
+
+      <!-- Rocky -->
+      <h3 class="sub"><span class="no">5</span> Rocky: a five-legged walking robot, from CAD to policy</h3>
+      <p class="sidenote"><b>Build</b><br><a class="ref" href="https://github.com/ryanrahman27/rocky" target="_blank" rel="noopener">Code on GitHub &rarr;</a></p>
+      <p>Rocky is a pentapod I designed and trained end to end: a 250 mm pentagonal body carrying five identical 342 mm limbs at 72° spacing, one of which doubles as a manipulator. The repo takes it from a Fusion 360 CAD master to a simulation model (MJCF / URDF), an analytic wave gait, and a PPO locomotion policy in MuJoCo (mjlab). Sixteen Feetech STS3215 joints, 4.17 kg all-up.</p>
+
+      <figure>
+        <div class="photo-row">
+          <img src="assets/rocky_gait_policy.gif" alt="Rocky's trained PPO locomotion policy walking and turning" loading="lazy" onerror="this.closest('figure').style.display='none'" />
+          <img src="assets/rocky_gait_wave.gif" alt="Rocky's scripted analytic wave gait, open loop" loading="lazy" onerror="this.closest('figure').style.display='none'" />
+        </div>
+        <figcaption><b>Left:</b> the trained PPO policy, walking forward at ~0.06 m/s and turning in place at ~0.15 rad/s. <b>Right:</b> the analytic wave gait it was taught from, open loop, one foot swinging at a time in the star order 0 → 2 → 4 → 1 → 3.</figcaption>
+      </figure>
+
+      <p>Open loop, the wave gait reaches only ~78% of commanded speed; the shortfall is servo deflection, not the gait, which is the clearest argument in the repo for closing the loop. The RL task carries the gait over with a gait-phase clock in the observation, a contact-schedule reward, and an imitation reward that constrains foot placement. That third term was decisive: contact scheduling alone constrains <i>when</i> a foot is down but never <i>where</i> it lands, so the policy learned to step in place; adding the imitation term fixed it in one run.</p>
+
+      <div class="stats">
+        <div class="stat"><div class="v">Pentapod</div><div class="k">5 legs · 16 joints</div></div>
+        <div class="stat"><div class="v">Wave gait</div><div class="k">Analytic, open-loop</div></div>
+        <div class="stat"><div class="v">PPO</div><div class="k">mjlab / MuJoCo</div></div>
+        <div class="stat"><div class="v">CAD → policy</div><div class="k">Fusion 360 → sim</div></div>
       </div>
     </section>
 

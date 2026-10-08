@@ -10,6 +10,10 @@
 <link rel="stylesheet" href="assets/legacy.css">
 <link rel="stylesheet" href="assets/site.css">
 <script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script>
 // Preserve previously shared homepage section links.
 const oldSections = {'#experience':'experience.html','#preprints':'preprints.html','#discussion':'writing.html'};
 function followOldSection(){const destination=oldSections[location.hash];if(destination)location.replace(destination)}

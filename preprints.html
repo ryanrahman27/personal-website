@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Preprints &amp; reports · Ryan Rahman</title>
+<meta name="description" content="Ryan Rahman, robot learning researcher working on long-horizon manipulation, post-training, and force-aware manipulation. Founding Research Engineer at Preload and accelerated MASc researcher at Waterloo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/legacy.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body><a class="skip-link" href="#main">Skip to content</a>
+<div class="site-shell">
+<header class="site-header"><a class="home-link" href="index.html" aria-label="Ryan Rahman home">Ryan Rahman<span class="brand-dot">.</span></a>
+<nav aria-label="Main navigation"><a href="research.html">Research</a><a href="experience.html">Experience</a><a href="preprints.html" aria-current="page">Preprints</a><a href="writing.html">Writing</a></nav>
+</header>
+<main id="main">
+<div class="collection-intro"><h1 id="page-title">Preprints &amp; reports</h1></div><section id="preprints" class="content-section standalone-content" aria-labelledby="page-title">
+
+      <p>Research I'm developing and technical reports I've written. The full write-up (figures, equations, tables, and references) is linked from each.</p>
+
+      <div class="preprint">
+        <p class="status">Technical report · world models</p>
+        <h3>Neural Cup Pong: A Playable Action-Conditioned World Model</h3>
+        <p class="q">How small can a genuinely playable world model be, and what breaks first as you shrink it?</p>
+        <p class="body">A 409K-parameter GRU dynamics model and a 262K-parameter state-grounded decoder run an entire 3D cup-pong game from controller input, with no game engine and no graphics renderer in the loop. The learned model nails control (aim/power errors ~0.002, 99.4% phase accuracy, 100% directional response) but hits a "flight-precision wall": a small structured model cannot localize a ballistic landing to within a cup radius. A hybrid seeds exact flight from the network's own accurate control, restoring engine-parity sinking (6/6) while control and rendering stay fully neural.</p>
+        <div class="tags"><span class="tag">world models</span><span class="tag">GRU dynamics</span><span class="tag">neural rendering</span><span class="tag">PyTorch</span>
+</div>
+        <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/neural-cup-pong.html">Read the report →</a> &nbsp;·&nbsp; <a class="readlink" href="https://github.com/ryanrahman27/neural-cup-pong" target="_blank" rel="noopener">Code</a>
+</p>
+      </div>
+
+      <div class="preprint">
+        <p class="status">Preprint · results</p>
+        <h3>Diffusion-Trained Backbones for Flow-Matching VLA Policies</h3>
+        <p class="q">Does a diffusion-trained backbone produce better action-token hidden states than a matched autoregressive one when both drive the same flow-matching action expert?</p>
+        <p class="body">A controlled LIBERO study isolating the pretraining prior with a matched pair: Dream-7B (diffusion) vs. Qwen2.5-7B, its own autoregressive base, driving one shared flow-matching expert. The diffusion-trained backbone improves mean LIBERO success by <b>+5.9 points</b> (82.2 vs. 76.3), concentrated on the long-horizon (+12.0) and object (+11.2) suites where the AR backbone is weakest, and a tie on the near-ceiling suites. Linear probing finds the two equally decodable for low-level action, state, and gripper targets, so the behavioral gain does not reduce to the linear readability of immediate control. Single-seed, simulation-only; a controlled existence proof.</p>
+        <div class="tags"><span class="tag">π0.5 / OpenPI</span><span class="tag">flow matching</span><span class="tag">LIBERO</span><span class="tag">representation probing</span>
+</div>
+        <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/diffusion-vla.html">Read the paper →</a>
+</p>
+      </div>
+
+      <div class="preprint">
+        <p class="status">Research proposal · IROS 2026 Robotic Origami Challenge</p>
+        <h3>Origami-MoH: Tactile-Augmented Mixture-of-Horizons Flow Policies for Bimanual Dexterous Origami</h3>
+        <p class="q">On a 65-DoF bimanual dexterous platform with rich tactile sensing, does augmenting a flow-matching VLA with a Mixture-of-Horizons reactive head and progressive tactile fusion improve autonomous paper folding over a vision-only policy?</p>
+        <p class="body">A π0.5 flow policy made <i>reactive</i> (multi-horizon action prediction with disagreement-based replanning) and <i>contact-aware</i> through progressive tactile fusion, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder. Trained as a single vision-conditioned policy over a fixed six-fold sequence across 143 tactile-rich sessions, with a staged Phase 0–4 plan whose go/no-go criteria isolate the value of tactile sensing before the most invasive fusion is built, plus the systems work to fine-tune a 65-DoF policy from a 32-DoF base in OpenPI.</p>
+        <div class="tags"><span class="tag">π0.5</span><span class="tag">Mixture of Horizons</span><span class="tag">tactile fusion</span><span class="tag">65-DoF bimanual</span>
+</div>
+        <p style="margin:.9rem 0 0;"><a class="readlink" href="preprints/origami-moh.html">Read the proposal →</a>
+</p>
+      </div>
+    </section></main>
+<footer class="site-footer">
+<div><a class="home-link" href="index.html">Ryan Rahman</a>
+<p>Robot learning &amp; manipulation</p>
+</div>
+<div class="footer-links"><a href="mailto:r8rahman@uwaterloo.ca">Email ↗</a><a href="https://x.com/ryanrahman360">X / Twitter ↗</a><a href="https://github.com/ryanrahman27">GitHub ↗</a><a href="https://www.linkedin.com/in/ryan-rahman27/">LinkedIn ↗</a><span class="eyebrow">Updated 8 October 2026</span>
+</div>
+</footer>
+</div>
+
+</body>
+</html>

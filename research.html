@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Research · Ryan Rahman</title>
+<meta name="description" content="Ryan Rahman, robot learning researcher working on long-horizon manipulation, post-training, and force-aware manipulation. Founding Research Engineer at Preload and accelerated MASc researcher at Waterloo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/legacy.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body><a class="skip-link" href="#main">Skip to content</a>
+<div class="site-shell">
+<header class="site-header"><a class="home-link" href="index.html" aria-label="Ryan Rahman home">Ryan Rahman<span class="brand-dot">.</span></a>
+<nav aria-label="Main navigation"><a href="research.html" aria-current="page">Research</a><a href="experience.html">Experience</a><a href="preprints.html">Preprints</a><a href="writing.html">Writing</a></nav>
+</header>
+<main id="main">
+<div class="collection-intro">
+<p class="eyebrow">Projects &amp; methods</p>
+<h1>Research in detail.</h1>
+<p>Long-horizon manipulation, post-training, and learning to act in the physical world.</p>
+<p>Mechatronics Engineering + AI at the University of Waterloo, working on foundational models and robot learning for manipulation. Currently a Founding Research Engineer at <a href="https://preload.ai/" target="_blank" rel="noopener"><b>Preload</b></a> (YC F26) and an accelerated <b>MASc</b> researcher in robotics at Waterloo under <a href="https://scholar.google.com/citations?user=_gfwCNwAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Stephen L. Smith</b></a>; previously a Research Engineer at <a href="https://www.axibo.com/" target="_blank" rel="noopener"><b>AXIBO</b></a> under <a href="https://scholar.google.ca/citations?user=HJDUjeIAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Vidyasagar Rajendran</b></a>.</p><a href="index.html#research">← Selected work</a>
+</div>
+<section id="research" class="content-section" aria-labelledby="heading-research">
+<div class="section-heading"><span class="eyebrow">01</span>
+<h2 id="heading-research">Research &amp; engineering</h2>
+</div>
+      <p>Research proposals, deployed manipulation systems, and independent engineering projects. Status and scope are noted with each project.</p>
+
+      <!-- Origami (IROS 2026) -->
+      <h3 class="sub"><span class="no">1</span> Bimanual Dexterous Origami: the IROS 2026 Robotic Origami Challenge</h3>
+      <p class="sidenote"><b>Proposal</b><br><a class="ref" href="preprints/origami-moh.html">Read Origami-MoH &rarr;</a>
+</p>
+      <p>For the IROS 2026 Robotic Origami Challenge, I'm developing autonomous paper folding on a 65-DoF bimanual dexterous platform with rich tactile sensing. The approach makes a <b>π0.5</b> flow policy <b>reactive</b> (multi-horizon action prediction with disagreement-based replanning) and <b>contact-aware</b> (progressive tactile fusion, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder), trained as a single vision-conditioned policy over a fixed six-fold sequence.</p>
+      <p>To tackle the long-horizon problem, I <b>segment demonstrations over their temporal shape</b> into contact-delimited subgoals, then train the model to <b>predict the next subgoal state from proprioception and tactile alone</b> (no vision). This decomposes the minutes-long fold into short, individually verifiable steps and gives the policy intermediate targets that stay reliable exactly when the crease self-occludes the camera.</p>
+
+      <figure>
+        <video class="vid" src="assets/origami.mp4" controls playsinline preload="none" poster="assets/origami-poster.jpg"></video>
+        <figcaption><b>Origami-MoH.</b> Bimanual dexterous manipulation hardware for the challenge. The full method, staged Phase 0–4 plan, and go/no-go criteria are in the <a class="ref" href="preprints/origami-moh.html">Origami-MoH proposal</a>.</figcaption>
+      </figure>
+
+      <div class="stats">
+        <div class="stat">
+<div class="v">65-DoF</div>
+<div class="k">Bimanual dexterous</div>
+</div>
+        <div class="stat">
+<div class="v">MoH</div>
+<div class="k">Reactive multi-horizon</div>
+</div>
+        <div class="stat">
+<div class="v">Tactile</div>
+<div class="k">Progressive fusion</div>
+</div>
+        <div class="stat">
+<div class="v">IROS 2026</div>
+<div class="k">Origami Challenge</div>
+</div>
+      </div>
+
+      <!-- Junior -->
+      <h3 class="sub"><span class="no">2</span> A Deployed Bimanual Manipulation Policy Stack: <i>Junior</i>
+</h3>
+      <p class="sidenote"><b>Role</b><br>End-to-end ownership: demo-collection hardware → policy training → closed-loop deployment on Junior's dual arms.</p>
+
+      <figure class="photo-fig">
+        <div class="photo-row">
+          <img src="assets/junior-1.jpg" alt="Junior, AXIBO's humanoid robot, upper body" loading="lazy" />
+          <img src="assets/junior-2.jpg" alt="Junior, AXIBO's humanoid robot, full body" loading="lazy" />
+        </div>
+        <figcaption><b>Junior.</b> AXIBO's bimanual humanoid platform, the robot this policy stack is deployed on.</figcaption>
+      </figure>
+
+      <p>A single fixed action-chunk horizon trades foresight for precision, yet bimanual tasks need both. Camera, inference, and control delays misalign predicted actions with physical execution, and per-chunk inference alone caps effective control frequency on contact-rich tasks. Junior's deployed stack composes four ideas so each addresses a different failure mode: a <b>π0.5</b> flow-matching backbone, a <b>Mixture of Horizons</b> action head with a learnable gate, inference-time <b>latency matching</b> adapted from UMI, and <b>action interpolation</b> between predicted chunks drawn from the 2025 BEHAVIOR Challenge-winning solution.</p>
+      <p>Mixture of Horizons resolves the foresight / precision trade-off of a single fixed horizon; latency matching keeps predicted actions temporally aligned with execution; and action interpolation raises the effective control frequency between chunk predictions without extra inference calls. The components compound rather than compete, yielding improved throughput, accuracy, and precision over a single-horizon, latency-naive baseline.</p>
+
+      <figure>
+        <div class="plate">
+          <div class="flow">
+            <div class="node accent"><span class="t">π0.5 base policy</span><span class="d">flow-matching VLA backbone · MV-UMI demos</span>
+</div>
+            <span class="arrow">→</span>
+            <div class="node"><span class="t">Mixture of Horizons</span><span class="d">multi-horizon chunks · learnable gate</span>
+</div>
+            <span class="arrow">→</span>
+            <div class="node"><span class="t">Latency matching</span><span class="d">UMI-style · ~135 ms compensation</span>
+</div>
+            <span class="arrow">→</span>
+            <div class="node"><span class="t">Action interpolation</span><span class="d">between predicted chunks</span>
+</div>
+            <span class="arrow">→</span>
+            <div class="node accent"><span class="t">Deployed on Junior</span><span class="d">closed-loop dual-arm control</span>
+</div>
+          </div>
+        </div>
+        <figcaption><b>Figure 1.</b> Junior's deployed policy stack. Each stage targets a distinct failure mode: foresight/precision, temporal misalignment, and control-frequency ceiling.</figcaption>
+      </figure>
+
+      <div class="stats">
+        <div class="stat">
+<div class="v">π0.5</div>
+<div class="k">Base policy</div>
+</div>
+        <div class="stat">
+<div class="v">MoH</div>
+<div class="k">Learnable gated fusion</div>
+</div>
+        <div class="stat">
+<div class="v">~135 ms</div>
+<div class="k">Latency compensated</div>
+</div>
+        <div class="stat">
+<div class="v">Interp.</div>
+<div class="k">Action execution</div>
+</div>
+      </div>
+
+      <!-- 2.2 DSRL -->
+      <h3 class="sub"><span class="no">3</span> Noise-Space RL Fine-Tuning of Flow-Matching Policies</h3>
+      <p class="sidenote"><b>Basis</b><br>DSRL: <i>Steering Your Diffusion Policy with Latent Space Reinforcement Learning</i>, Wagenmaker et al., CoRL 2025.</p>
+      <p>Fine-tuning a diffusion or flow policy's weights with RL is unstable and demands full access to model internals, while behavior-cloned policies plateau without costly additional demonstrations. DSRL sidesteps both: instead of updating weights, it trains a small RL agent to select the <b>noise seed</b> that initializes denoising, steering a frozen, black-box base policy toward better behavior.</p>
+      <p>I applied DSRL-style noise-space RL to our deployed VLA policy's action head, training a lightweight SAC agent (~500K parameters) to pick the seed that steers the frozen base policy. Because RL runs over the latent-noise space, never through the denoiser, so no gradients touch the base weights and no model internals are required. This post-training contributed to a <b>30% manipulation-performance gain over imitation baselines</b>, adapting a frozen policy without modifying its weights or collecting extra demonstrations.</p>
+
+      <figure>
+        <div class="plate">
+          <div class="flow">
+            <div class="node accent"><span class="t">Small SAC agent</span><span class="d">~500K params · picks noise seed z</span>
+</div>
+            <span class="arrow">↘</span>
+            <div class="node frozen"><span class="t">Frozen base policy</span><span class="d">diffusion / flow · weights untouched</span>
+</div>
+            <span class="arrow">→</span>
+            <div class="node"><span class="t">Denoising from z</span><span class="d">no gradients through denoiser</span>
+</div>
+            <span class="arrow">→</span>
+            <div class="node"><span class="t">Action executed</span><span class="d">steered behavior</span>
+</div>
+          </div>
+        </div>
+        <figcaption><b>Figure 2.</b> DSRL-style noise-space RL. The agent optimizes over the latent-noise input, not the policy weights, keeping the base policy frozen and black-box compatible.</figcaption>
+      </figure>
+
+      <div class="stats">
+        <div class="stat">
+<div class="v">Noise-space</div>
+<div class="k">RL, not weights</div>
+</div>
+        <div class="stat">
+<div class="v">~500K</div>
+<div class="k">Trainable params</div>
+</div>
+        <div class="stat">
+<div class="v">+30%</div>
+<div class="k">Over imitation</div>
+</div>
+        <div class="stat">
+<div class="v">Frozen</div>
+<div class="k">Base weights</div>
+</div>
+      </div>
+
+      <!-- 2.3 Latent WAM -->
+      <h3 class="sub"><span class="no">4</span> Latent World-Action Models (VLA-JEPA)</h3>
+      <p class="sidenote"><b>Basis</b><br>VLA-JEPA: <i>Enhancing Vision-Language-Action Models with a Latent World Model</i>, Sun et al., 2026.</p>
+      <p>Standard VLA policies map observations directly to actions without modeling how the scene will evolve, and pixel-space prediction is brittle to appearance and camera changes. Following VLA-JEPA, I built action-conditioned latent world-action models that predict future <b>latent</b> states rather than pixels, a leakage-free formulation in which future frames are only ever targets, never inputs.</p>
+      <p>The model encodes the current observation plus action context into a latent representation and predicts 10-step, action-conditioned latent dynamics with no pixel reconstruction. A two-stage recipe (JEPA-style pretraining followed by action-head fine-tuning) integrates the predicted latent rollouts with downstream VLA action heads. I evaluated rollout consistency across manipulation trajectories to assess temporal coherence of the learned dynamics.</p>
+
+      <figure>
+        <div class="plate">
+          <div class="flow col" style="gap:1rem;">
+            <div class="flow">
+              <div class="node frozen"><span class="t">Future frames</span><span class="d">target pathway · EMA, no gradient</span>
+</div>
+              <span class="arrow">→</span>
+              <div class="node frozen"><span class="t">Target encoder</span><span class="d">frozen / EMA</span>
+</div>
+              <span class="arrow">→</span>
+              <div class="node"><span class="t">Latent targets</span><span class="d">stop-grad · never inputs</span>
+</div>
+            </div>
+            <div class="flow">
+              <div class="node accent"><span class="t">Current observation</span><span class="d">student pathway · frame t</span>
+</div>
+              <span class="arrow">→</span>
+              <div class="node"><span class="t">VLM backbone</span><span class="d">+ latent action tokens</span>
+</div>
+              <span class="arrow">→</span>
+              <div class="node"><span class="t">Predictor</span><span class="d">10-step latent rollout</span>
+</div>
+              <span class="arrow">→</span>
+              <div class="node accent"><span class="t">Flow-matching head</span><span class="d">action-head fine-tune</span>
+</div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Figure 3.</b> VLA-JEPA architecture (redrawn). A JEPA alignment loss ties the student's predicted latents to EMA target latents; future frames never enter the backbone, so the objective stays leakage-free.</figcaption>
+      </figure>
+
+      <div class="stats">
+        <div class="stat">
+<div class="v">10-step</div>
+<div class="k">Latent horizon</div>
+</div>
+        <div class="stat">
+<div class="v">Latent</div>
+<div class="k">Not pixel targets</div>
+</div>
+        <div class="stat">
+<div class="v">2-stage</div>
+<div class="k">Pretrain → fine-tune</div>
+</div>
+        <div class="stat">
+<div class="v">Leakage-free</div>
+<div class="k">State prediction</div>
+</div>
+      </div>
+
+      <!-- Rocky -->
+      <h3 class="sub" id="rocky"><span class="no">5</span> Rocky: a five-legged walking robot</h3>
+      <p class="sidenote"><b>Build</b><br><a class="ref" href="https://github.com/ryanrahman27/rocky" target="_blank" rel="noopener">Code on GitHub &rarr;</a>
+</p>
+      <p>Rocky is a pentapod I designed and trained end to end: a 250 mm pentagonal body carrying five identical 342 mm limbs at 72° spacing, one of which doubles as a manipulator. The repo takes it from a Fusion 360 CAD master to a simulation model (MJCF / URDF), an analytic wave gait, and a PPO locomotion policy in MuJoCo (mjlab). Sixteen Feetech STS3215 joints, 4.17 kg all-up.</p>
+
+      <figure>
+        <div class="photo-row">
+          <img src="assets/rocky_gait_policy.gif" alt="Rocky's trained PPO locomotion policy walking and turning" loading="lazy" />
+          <img src="assets/rocky_gait_wave.gif" alt="Rocky's scripted analytic wave gait, open loop" loading="lazy" />
+        </div>
+        <figcaption><b>Left:</b> the trained PPO policy, walking forward at ~0.06 m/s and turning in place at ~0.15 rad/s. <b>Right:</b> the analytic wave gait it was taught from, open loop, one foot swinging at a time in the star order 0 → 2 → 4 → 1 → 3.</figcaption>
+      </figure>
+
+      <p>Open loop, the wave gait reaches only ~78% of commanded speed; the shortfall is servo deflection, not the gait, which is the clearest argument in the repo for closing the loop. The RL task carries the gait over with a gait-phase clock in the observation, a contact-schedule reward, and an imitation reward that constrains foot placement. That third term was decisive: contact scheduling alone constrains <i>when</i> a foot is down but never <i>where</i> it lands, so the policy learned to step in place; adding the imitation term fixed it in one run.</p>
+
+      <div class="stats">
+        <div class="stat">
+<div class="v">Pentapod</div>
+<div class="k">5 legs · 16 joints</div>
+</div>
+        <div class="stat">
+<div class="v">Wave gait</div>
+<div class="k">Analytic, open-loop</div>
+</div>
+        <div class="stat">
+<div class="v">PPO</div>
+<div class="k">mjlab / MuJoCo</div>
+</div>
+        <div class="stat">
+<div class="v">CAD → policy</div>
+<div class="k">Fusion 360 → sim</div>
+</div>
+      </div>
+    </section>
+</main>
+<footer class="site-footer">
+<div><a class="home-link" href="index.html">Ryan Rahman</a>
+<p>Robot learning &amp; manipulation</p>
+</div>
+<div class="footer-links"><a href="mailto:r8rahman@uwaterloo.ca">Email ↗</a><a href="https://x.com/ryanrahman360">X / Twitter ↗</a><a href="https://github.com/ryanrahman27">GitHub ↗</a><a href="https://www.linkedin.com/in/ryan-rahman27/">LinkedIn ↗</a><span class="eyebrow">Updated 8 October 2026</span>
+</div>
+</footer>
+</div>
+</body>
+</html>

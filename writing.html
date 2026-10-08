@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Writing &amp; reading notes · Ryan Rahman</title>
+<meta name="description" content="Ryan Rahman, robot learning researcher working on long-horizon manipulation, post-training, and force-aware manipulation. Founding Research Engineer at Preload and accelerated MASc researcher at Waterloo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/legacy.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body><a class="skip-link" href="#main">Skip to content</a>
+<div class="site-shell">
+<header class="site-header"><a class="home-link" href="index.html" aria-label="Ryan Rahman home">Ryan Rahman<span class="brand-dot">.</span></a>
+<nav aria-label="Main navigation"><a href="research.html">Research</a><a href="experience.html">Experience</a><a href="preprints.html">Preprints</a><a href="writing.html" aria-current="page">Writing</a></nav>
+</header>
+<main id="main">
+<div class="collection-intro"><h1 id="page-title">Writing &amp; reading notes</h1></div><section id="discussion" class="content-section standalone-content" aria-labelledby="page-title">
+
+      <p>Notes on papers I've been reading in robot learning: my read on what's interesting, what's limited, and where it points next. Each links the paper it's about.</p>
+
+      <details class="post">
+        <summary>
+        <p class="post-meta">July 2026 · Reading</p>
+        <h3 class="post-title">World-action models, and where robotics foundation models are heading</h3>
+        </summary>
+        <div class="post-inner">
+        <a class="paper-card" href="https://developer.nvidia.com/blog/pretrained-to-imagine-fine-tuned-to-act-the-rise-of-world-action-models/" target="_blank" rel="noopener">
+          <span class="pc-label">Reading</span>
+          <span class="pc-title">Pretrained to Imagine, Fine-Tuned to Act: The Rise of World-Action Models</span>
+          <span class="pc-meta">NVIDIA Technical Blog · 2026</span>
+        </a>
+        <div class="post-body">
+          <p>Definitely worth a read if you're interested in foundational models for robotics and the direction the field is going in: pretraining on video to imagine how the world evolves, then fine-tuning that same backbone to act. It's the throughline behind a lot of what I'm working on right now.</p>
+        </div>
+      </div>
+      </details>
+
+      <details class="post">
+        <summary>
+        <p class="post-meta">May 2026 · Humanoid control</p>
+        <h3 class="post-title">From a single video to whole-body humanoid control</h3>
+        </summary>
+        <div class="post-inner">
+        <a class="paper-card" href="https://arxiv.org/abs/2505.03729" target="_blank" rel="noopener">
+          <span class="pc-label">Paper</span>
+          <span class="pc-title">VideoMimic: Visual Imitation Enables Contextual Humanoid Control</span>
+          <span class="pc-meta">Allshire, Choi, Zhang et al. · CoRL 2025 (Best Student Paper) · arXiv:2505.03729</span>
+        </a>
+        <div class="post-body">
+          <p>I've been digging into video-based humanoid control, and this paper really stood out. The pipeline is surprisingly clean:</p>
+          <div class="pipeline">video → 4D human + scene reconstruction → motion retargeting → RL tracking → policy distillation</div>
+          <p>From a single monocular video, the system jointly reconstructs metric-scale human motion and scene geometry, retargets it to a humanoid, and trains a policy to track those trajectories under physical constraints. What I like is how cleanly the roles separate:</p>
+          <ul class="roles">
+            <li><b>reconstruction</b> <span class="ar">→</span> geometric + temporal supervision</li>
+            <li><b>retargeting</b> <span class="ar">→</span> embodiment consistency</li>
+            <li><b>RL</b> <span class="ar">→</span> dynamic feasibility</li>
+            <li><b>distillation</b> <span class="ar">→</span> a single multi-skill policy</li>
+          </ul>
+          <p>It effectively turns passive video into a structured control signal, without relying on teleoperation or motion capture. The limitation is that it's still fundamentally trajectory-tracking: it inherits biases from reconstruction and has no explicit mechanism for reasoning about alternative futures or task objectives.</p>
+          <p>That raises a more interesting direction: what happens if we replace trajectory tracking with a learned world model?</p>
+          <div class="pipeline">video → latent dynamics model → action policy</div>
+          <p>That would decouple perception (what is happening), prediction (what will happen), and control (what to do). I'm exploring a small version of this pipeline, starting from extracting motion priors from video and training a policy in simulation.</p>
+        </div>
+      </div>
+      </details>
+
+      <details class="post">
+        <summary>
+        <p class="post-meta">April 2026 · VLA inference</p>
+        <h3 class="post-title">Making VLA policies run in real time</h3>
+        </summary>
+        <div class="post-inner">
+        <a class="paper-card" href="https://arxiv.org/abs/2506.07339" target="_blank" rel="noopener">
+          <span class="pc-label">Paper</span>
+          <span class="pc-title">Real-Time Execution of Action Chunking Flow Policies (RTC)</span>
+          <span class="pc-meta">Black, Galliker, Levine · Physical Intelligence · arXiv:2506.07339</span>
+        </a>
+        <div class="post-body">
+          <p>I've been diving into real-time execution for VLA models, and RTC stood out. The core idea is simple: instead of predicting actions, executing them, and then pausing to think again, RTC predicts the next action chunk <i>while the robot is still moving</i>.</p>
+          <p>By overlapping chunks and using a "freeze + inpaint" strategy, part of the trajectory is treated as fixed while the rest is generated, effectively turning the problem into constrained sequence prediction. This removes the latency bottleneck and shifts VLA policies from batch-style inference toward streaming control, much closer to how real robots actually operate.</p>
+          <p>One interesting limitation: overlapping actions are frozen, so the system can't correct mistakes mid-chunk: it can only adapt going forward. That raises a deeper question about how much of the future a robot should commit to at any given moment. It feels like an important step toward making generalist policies actually deployable, and I'd love to explore combining it with residual RL or adaptive horizons for something even more reactive.</p>
+        </div>
+      </div>
+      </details>
+
+      <details class="post">
+        <summary>
+        <p class="post-meta">March 2026 · VLA memory</p>
+        <h3 class="post-title">Giving VLAs a visual memory of where they've been</h3>
+        </summary>
+        <div class="post-inner">
+        <a class="paper-card" href="https://arxiv.org/abs/2412.10345" target="_blank" rel="noopener">
+          <span class="pc-label">Paper</span>
+          <span class="pc-title">TraceVLA: Visual Trace Prompting Enhances Spatial-Temporal Awareness for Generalist Robotic Policies</span>
+          <span class="pc-meta">Zheng et al. · arXiv:2412.10345</span>
+        </a>
+        <div class="post-body">
+          <p>One of the biggest weaknesses of VLA models is long-horizon reasoning. Most VLA policies predict actions from the current observation alone:</p>
+          <div class="pipeline">π(a<sub>t</sub> | image<sub>t</sub>, instruction)</div>
+          <p>This works surprisingly well for short manipulation tasks. But once the robot executes 20–100 steps, small errors compound and the policy drifts off distribution. TraceVLA asks a simple question: what if we gave the robot an explicit visual memory of its past trajectory? Instead of only the current frame, it provides two visual inputs (the current observation, and the same image with trajectory traces overlaid), encoding the robot's past state-action history directly in the visual domain. The pipeline:</p>
+          <ul class="roles">
+            <li><b>1</b> <span class="ar">→</span> track motion trajectories from past frames with a dense point tracker (CoTracker)</li>
+            <li><b>2</b> <span class="ar">→</span> filter points with significant movement</li>
+            <li><b>3</b> <span class="ar">→</span> overlay those trajectories onto the observation frame</li>
+            <li><b>4</b> <span class="ar">→</span> feed both the original image and the trace image into the VLA backbone</li>
+          </ul>
+          <div class="pipeline">[Image tokens] → [Trace tokens] → [Language tokens] → Transformer → Action tokens</div>
+          <p>This effectively converts temporal information into spatial structure, which transformers reason over much better. The result: <b>+10%</b> over OpenVLA in simulation, <b>3.5×</b> higher success on real-robot tasks, and strong generalization across embodiments.</p>
+          <p>The broader insight is what I find interesting: instead of scaling context windows or storing long histories, this compresses trajectory memory into a spatial representation: the robot doesn't need to remember the whole action sequence because it just sees the path it took. That feels especially relevant for long-horizon tasks like cloth folding, object rearrangement, multi-step assembly, and tool use. I ran into similar long-horizon issues working with policies trained from teleoperation data, so seeing this was exciting, a step toward giving VLA systems a more explicit notion of spatial-temporal memory.</p>
+        </div>
+      </div>
+      </details>
+
+      <details class="post">
+        <summary>
+        <p class="post-meta">March 2026 · Residual RL</p>
+        <h3 class="post-title">Classical control for the easy part, RL for the mess</h3>
+        </summary>
+        <div class="post-inner">
+        <a class="paper-card" href="https://arxiv.org/abs/1812.03201" target="_blank" rel="noopener">
+          <span class="pc-label">Paper</span>
+          <span class="pc-title">Residual Reinforcement Learning for Robot Control</span>
+          <span class="pc-meta">Johannink, Bahl, Nair, Luo, Levine et al. · arXiv:1812.03201</span>
+        </a>
+        <div class="post-body">
+          <p>A lot of robotics failures don't come from predicting the wrong action. They come from contacts, friction, and object dynamics making the control problem messy. Residual RL proposes a simple but useful hybrid: use classical control for what it's good at, and reinforcement learning for the leftover complexity. The reward decomposes as:</p>
+          <div class="pipeline">r<sub>t</sub> = f(s<sub>robot</sub>) + g(s<sub>objects</sub>)</div>
+          <ul class="roles">
+            <li><b>f(s<sub>robot</sub>)</b> <span class="ar">→</span> geometric objectives (trajectory tracking, positioning), well handled by conventional feedback control</li>
+            <li><b>g(s<sub>objects</sub>)</b> <span class="ar">→</span> object interactions and contact dynamics, much harder to model and better learned</li>
+          </ul>
+          <p>The key idea is an additive control policy:</p>
+          <div class="pipeline">u = π<sub>H</sub>(s<sub>m</sub>) + π<sub>θ</sub>(s<sub>m</sub>, s<sub>o</sub>)</div>
+          <ul class="roles">
+            <li><b>π<sub>H</sub></b> <span class="ar">→</span> a hand-engineered controller (impedance or trajectory control)</li>
+            <li><b>π<sub>θ</sub></b> <span class="ar">→</span> a learned residual that corrects for contacts, friction, and unmodeled dynamics</li>
+          </ul>
+          <p>Instead of learning a controller from scratch, RL only learns the residual correction. Evaluated on a real-world task (inserting a block between two standing blocks without tipping them over), the results are striking: residual RL learns faster and performs better than RL alone in both sim and reality; on misaligned starts the hand-designed controller succeeds 2/20 while residual RL succeeds 15/20; it learns subtle corrections (nudging blocks into alignment) in ~8,000 samples (~3 hours of real interaction); and initialized from MuJoCo, it solves the task in under 1,000 real-world timesteps.</p>
+          <p>My takeaway: structure from classical control plus adaptability from RL is a very clean way to tackle contact-rich manipulation: let RL focus on the parts that are hardest to model, instead of rediscovering everything. I keep thinking about this in modern VLA systems: should robustness come from residual policies, or from fine-tuning the full foundation model?</p>
+        </div>
+      </div>
+      </details>
+
+      <details class="post">
+        <summary>
+        <p class="post-meta">February 2026 · Reinforced fine-tuning</p>
+        <h3 class="post-title">Fine-tuning VLAs past the imitation ceiling</h3>
+        </summary>
+        <div class="post-inner">
+        <a class="paper-card" href="https://arxiv.org/abs/2502.05450" target="_blank" rel="noopener">
+          <span class="pc-label">Paper</span>
+          <span class="pc-title">ConRFT: A Reinforced Fine-tuning Method for VLA Models via Consistency Policy</span>
+          <span class="pc-meta">Chen, Tian, Liu, Zhou, Li, Zhao · arXiv:2502.05450</span>
+        </a>
+        <div class="post-body">
+          <p>One of the biggest weaknesses of imitation-trained VLA models is distribution shift during rollout. Behavior cloning optimizes action prediction on expert states, but once deployed the robot visits states induced by its own policy, and small prediction errors compound quickly. (As I was preparing for my role at AXIBO, I started digging deeper into VLA systems: action heads, value integration, online adaptation, embodiment constraints.) ConRFT proposes a two-stage reinforced fine-tuning pipeline aimed at exactly this problem.</p>
+          <p><b>Stage 1: Cal-ConRFT (offline).</b> Calibrated Q-learning for conservative value estimates, augmented with a behavior-cloning loss under a unified objective:</p>
+          <div class="pipeline">L<sub>π</sub> = β · L<sub>BC</sub> + η · L<sub>Q</sub>
+</div>
+          <p>Trained on only 20–30 demonstrations, so the BC term is needed to stabilize; the hybrid objective improves expected return while staying close to demonstrated behavior.</p>
+          <p><b>Stage 2: HIL-ConRFT (online).</b> Same unified loss, symmetric sampling from demo and replay buffers, and human-in-the-loop interventions for safe exploration, gradually shifting weight from BC (β) toward Q-learning (η). One detail I liked: instead of a diffusion action head, ConRFT uses a lightweight consistency policy head (diffusion horizon discretized into M = 40 steps, a 2-layer MLP), giving efficient inference with value-guided refinement.</p>
+          <p>Across 8 real-world tasks it reaches <b>96.3%</b> average success within 45–90 minutes of online training, a 144% improvement over the supervised baseline with 1.9× shorter episodes (the baseline reached only 31.9% in the same budget). The takeaway: imitation provides a strong prior, but without value-based refinement, policies struggle under their own induced state distribution. ConRFT reframes VLA fine-tuning as consistency-based policy learning guided by Q-estimates and stabilized by behavior cloning.</p>
+        </div>
+      </div>
+      </details>
+    </section></main>
+<footer class="site-footer">
+<div><a class="home-link" href="index.html">Ryan Rahman</a>
+<p>Robot learning &amp; manipulation</p>
+</div>
+<div class="footer-links"><a href="mailto:r8rahman@uwaterloo.ca">Email ↗</a><a href="https://x.com/ryanrahman360">X / Twitter ↗</a><a href="https://github.com/ryanrahman27">GitHub ↗</a><a href="https://www.linkedin.com/in/ryan-rahman27/">LinkedIn ↗</a><span class="eyebrow">Updated 8 October 2026</span>
+</div>
+</footer>
+</div>
+
+</body>
+</html>

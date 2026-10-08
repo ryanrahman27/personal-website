@@ -1,88 +1,30 @@
-# Ryan Rahman — Personal Website
+# Ryan Rahman — personal research website
 
-A single-file, dependency-free personal site styled like a typeset research paper.
-No build step, no framework, no external fonts — just `index.html`.
+A static, responsive website. No framework or build step is required.
 
-```
-ryan-portfolio/
-├── index.html                  ← the main site
-├── preprints/
-│   ├── diffusion-vla.html      ← Diffusion-VLA backbone study (full proposal)
-│   └── origami-moh.html        ← Origami-MoH / IROS 2026 challenge (full proposal)
-├── index_artifact.html         ← content-only copy for the Claude preview link (ignore for hosting)
-└── README.md
-```
+- `index.html`: introduction and selected work.
+- `experience.html`, `preprints.html`, `writing.html`: dedicated section pages.
+- `research.html`: full research descriptions, architectures, media, and results.
+- `preprints/`: three standalone papers and reports, with original print styles.
+- `assets/site.css`: homepage and research design and responsive rules.
+- `assets/legacy.css`: supporting styles for existing technical figures and notes.
+- `assets/paper.css`: shared screen styles for the papers.
+- `assets/`: original project media, derived poster/still images, results graphic, and CV.
 
-Deploy the **whole folder** (except `index_artifact.html`, which is only for the Claude preview).
-The Preprints section on the site links to the two pages under `preprints/`.
+The design uses Instrument Sans (Google Fonts, with a sans-serif fallback), system monospace metadata, warm off-white, and blue links. Anchor navigation works without JavaScript. Each page marks its current navigation link. Legacy homepage section links redirect to the corresponding pages.
 
----
+## Local preview
 
-## Recommended hosting: Vercel
+Run `python -m http.server 8765` in this directory, then open http://localhost:8765.
 
-Since the site is one static file, Vercel is the simplest possible deploy. Two ways:
+## Content updates
 
-### Option A — CLI (fastest)
-```bash
-npm i -g vercel
-cd ryan-portfolio
-vercel          # first run: log in, accept defaults, framework preset = "Other"
-vercel --prod   # promote to your production URL
-```
+Edit HTML directly. Preserve accurate project status labels: the backbone study is a preprint with single-seed simulation results, Origami-MoH is a research proposal, and Rocky is an engineering project. The selected-work graphic uses the backbone study's reported 82.2% and 76.3% mean success rates.
 
-### Option B — Dashboard (no terminal)
-1. Push this folder to a GitHub repo (or just drag-and-drop the folder at **vercel.com/new**).
-2. Framework Preset: **Other**. Build command: *none*. Output directory: `./`.
-3. Deploy. You get `ryan-rahman.vercel.app` instantly.
+Replace `assets/ryan-rahman-cv.pdf` to update the CV. The current copy was supplied on 8 October 2026 and is dated 18 September 2026. Update the footer date when content changes.
 
-### Custom domain
-Buy a domain (e.g. `ryanrahman.ai`, `ryanrahman.dev`, or `rrahman.me`) and add it under
-**Project → Settings → Domains**. Vercel walks you through the DNS records and issues HTTPS automatically.
+## Deployment
 
----
+Publish the HTML pages and assets together on the existing static host. No build command is needed. `index_artifact.html` is a legacy preview export and is not used by the site. `review/` contains local QA artifacts and is excluded from Git.
 
-## Other one-click options (all equally fine for a static file)
-
-| Host | How | Notes |
-|------|-----|-------|
-| **GitHub Pages** | Push repo → Settings → Pages → deploy from `main` | Free, `username.github.io` |
-| **Cloudflare Pages** | Drag-drop folder at pages.cloudflare.com | Fastest global CDN |
-| **Netlify** | Drag-drop folder at app.netlify.com/drop | Instant preview URLs |
-
-Any of these work with zero configuration because there is no build.
-
----
-
-## Editing the content
-
-Everything lives in `index.html`. Common edits:
-
-- **Contact links** — top of `<body>`, the `.byline` block. Update your email, LinkedIn, and GitHub URL.
-- **Add a project** — copy an `<h3 class="sub">` … `figure` … `.stats` block inside `<section id="research">`.
-- **Add a paper** — append an `<li>` in `<ol class="refs">`; link the `[n]` markers from the text with `<a class="ref" href="#references">[n]</a>`.
-- **Colors / fonts** — the `:root` token block at the top of `<style>`. Change `--accent`, `--paper`, `--ink`, or the `--serif` stack in one place.
-
-After editing, just re-deploy (`vercel --prod`, or push to GitHub).
-
----
-
-## Notes on choices I made
-
-- **LinkedIn could not be read.** Your profile is behind LinkedIn's login wall and no signed-in
-  browser was connected, so the Experience section is still built from your portfolio PDF, reformatted
-  into LinkedIn-style prose (no bullets). Paste your current LinkedIn experience text and I'll sync it.
-- **Experiences are prose, not bullets** — one description paragraph per role, matching LinkedIn.
-- **Preprints** link to full standalone proposal pages (`preprints/*.html`), styled like printed papers.
-  Both are marked "living document." The Origami one is also live as a Claude artifact you own.
-- **Phone number omitted.** Your portfolio PDF lists a personal number; I left it off the public site
-  on purpose (a phone number on a public page gets scraped for spam). Add it back in the `.byline`
-  if you want it.
-- **GitHub link is a placeholder** (`https://github.com/`). Drop in your real handle.
-- **Email** is set to `r8rahman@uwaterloo.ca` (from your portfolio). Swap for `ryan@axibo.com` or any other
-  if you prefer.
-- **Fonts are system serifs** (Palatino / Iowan / Georgia) so the page needs no downloads and looks
-  identical everywhere. If you want the true LaTeX "Computer Modern" look, I can swap in a self-hosted
-  webfont later.
-- **arXiv IDs** are transcribed exactly as they appear in your portfolio. Reference [1] (π0.5) links to
-  Physical Intelligence's page since your portfolio didn't include its arXiv ID — double-check the links
-  before you publish.
+Before publishing, review at 390, 768, and 1440 px widths; check keyboard navigation, local links, CV loading, and video playback. Publishing is separate from local editing.

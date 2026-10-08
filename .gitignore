@@ -5,3 +5,6 @@ preprints/*_artifact.html
 # OS / editor cruft
 .DS_Store
 Thumbs.db
+
+# Local visual review artifacts
+review/

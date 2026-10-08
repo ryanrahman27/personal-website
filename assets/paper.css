@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap');
+@media screen{
+ :root{--ink:#181a1d;--muted:#63686f;--hair:#d9ddd9;--link:#405f86;--boxbg:#eeefeb;--boxline:#d9ddd9}
+ body{background:#f9f9f6;font-family:'Instrument Sans',Arial,sans-serif;font-size:17px;line-height:1.65}
+ a{text-decoration:underline;text-underline-offset:4px}a:focus-visible{outline:2px solid #405f86;outline-offset:4px}
+ .backbar{max-width:960px;padding:32px 32px 0;font:500 14px/1.5 'Instrument Sans',Arial,sans-serif;text-transform:none;letter-spacing:0}
+ .wrap{max-width:960px;padding:64px 32px 80px;columns:1}
+ .masthead{text-align:left;margin-bottom:48px}.eyebrow{font:12px/1.6 Consolas,monospace;text-transform:uppercase;letter-spacing:.08em;color:#405f86;margin-bottom:20px}
+ h1.title{font-size:44px;font-weight:500;letter-spacing:-.04em;line-height:1.15;margin:0 0 24px;max-width:none;text-wrap:wrap}
+ .subtitle{font-size:19px;line-height:1.6;font-style:normal;margin:0 0 24px;max-width:65ch}.byline{font-size:15px}.byline .aff,.byline .date{font-size:13px}
+ h2{font-size:27px;font-weight:500;letter-spacing:-.025em;text-align:left;font-variant:normal;margin:56px 0 20px;padding-top:24px;border-top:1px solid #d9ddd9}
+ h2:first-of-type{font-size:27px;font-style:normal;margin-top:40px}h2::before{font-size:15px;color:#405f86;margin-right:8px}
+ h3{font-size:21px;font-weight:500;font-style:normal;margin:32px 0 14px;letter-spacing:-.02em}
+ p{text-align:left;text-indent:0;margin:0 0 18px;hyphens:none}li{text-align:left;margin:8px 0}table{font-size:14px;line-height:1.55}caption{font-size:14px;font-variant:normal;text-align:left;margin-bottom:12px}
+ .tablewrap{margin:28px 0}.box{padding:20px;font-size:16px}.eq{padding:16px 0;font-size:16px}ol.refs{font-size:14px;line-height:1.6}ol.refs li{text-align:left;margin:12px 0}.foot{font-size:12px;text-align:left;margin-top:56px;padding-top:24px}
+}
+@media screen and (max-width:600px){.wrap{padding:40px 22px 56px}.backbar{padding:24px 22px 0}h1.title{font-size:32px}.subtitle{font-size:17px}h2,h2:first-of-type{font-size:25px}h3{font-size:21px}body{font-size:16px}thead th,tbody td{padding:8px}table{font-size:12px}}

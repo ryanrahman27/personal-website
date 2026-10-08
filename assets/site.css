@@ -20,7 +20,7 @@ h3{font-size:28px;font-weight:500;margin:0 0 16px}
 .hero-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}
 .hero-intro{font-size:26px;line-height:1.45;letter-spacing:-.025em;color:var(--muted);max-width:680px;margin:0 0 20px}
 .hero-affiliation{font-size:15px;max-width:680px;color:var(--muted)}
-.portrait{width:240px;height:240px;object-fit:contain;justify-self:end;margin-top:34px}
+.portrait{width:240px;height:240px;object-fit:cover;object-position:center 20%;justify-self:end;margin-top:34px}
 .hero-actions{display:flex;gap:32px;align-items:center;margin:32px 0 56px}
 .hero-actions a{font-size:17px;font-weight:500;color:var(--text);padding:8px 0}
 .hero-actions a:first-child{color:var(--link)}

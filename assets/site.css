@@ -17,10 +17,10 @@ h3{font-size:28px;font-weight:500;margin:0 0 16px}
 .site-header nav a:hover,.site-header nav a[aria-current]{color:var(--link);text-decoration:underline}
 .eyebrow{font:12px/1.6 var(--mono);text-transform:uppercase;letter-spacing:.075em;color:var(--muted);margin:0 0 16px}
 .hero{padding:80px 0 0}
-.hero-layout{display:grid;grid-template-columns:minmax(0,800px) 1fr;gap:56px;align-items:start}
+.hero-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}
 .hero-intro{font-size:26px;line-height:1.45;letter-spacing:-.025em;color:var(--muted);max-width:680px;margin:0 0 20px}
 .hero-affiliation{font-size:15px;max-width:680px;color:var(--muted)}
-.portrait{width:104px;height:130px;object-fit:cover;object-position:center top;justify-self:end;margin-top:34px;filter:grayscale(100%)}
+.portrait{width:240px;height:240px;object-fit:contain;justify-self:end;margin-top:34px}
 .hero-actions{display:flex;gap:32px;align-items:center;margin:32px 0 56px}
 .hero-actions a{font-size:17px;font-weight:500;color:var(--text);padding:8px 0}
 .hero-actions a:first-child{color:var(--link)}
@@ -97,7 +97,7 @@ h3.sub:first-of-type{margin-top:40px}
 
 @media(max-width:900px){.site-shell{padding:0 32px}
 .site-header nav{gap:20px}
-.hero-layout{grid-template-columns:1fr 100px;gap:24px}
+.hero-layout{grid-template-columns:minmax(0,1fr) 180px;gap:24px}.portrait{width:180px;height:180px}
 h1{font-size:60px}
 .hero-intro{font-size:23px}
 .work-row{gap:32px;grid-template-columns:42% 1fr}
@@ -113,7 +113,7 @@ h1{font-size:60px}
 .site-header nav a{font-size:13px;padding:12px 0}
 .hero{padding-top:48px}
 .hero-layout{display:block}
-.portrait{display:none}
+.portrait{display:block;width:160px;height:160px;margin:0 0 32px}
 h1{font-size:44px;letter-spacing:-.045em;margin:20px 0 24px}
 .hero-intro{font-size:21px;line-height:1.5}
 .hero-affiliation{font-size:14px;margin-top:24px}

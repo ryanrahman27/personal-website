@@ -1,5 +1,7 @@
 # Experience logo sources
 
+- Persona AI: https://persona.ai/wp-content/uploads/favicon-300x300.webp (downloaded 9 October 2026).
+
 Downloaded from official organization websites on 8 October 2026. Original brand artwork is preserved. Logos identify past and current affiliations.
 
 - Preload: https://preload.ai/assets/apple-touch-icon.png

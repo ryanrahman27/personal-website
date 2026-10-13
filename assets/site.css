@@ -166,3 +166,10 @@ img{max-width:100%}
 .social-links a{font-size:14px;padding:8px 0}
 @media(max-width:600px){.social-links{margin-bottom:40px;gap:24px}.entry .company-meta{margin-bottom:20px}}
 .company-logo.axibo{padding:4px;background:#000}.company-logo.axibo img{width:48px;height:48px;object-fit:contain}
+/* Keep useful dates, statuses, and captions readable without decorative labels. */
+.entry .sidenote{font:14px/1.7 var(--sans)}
+.preprint .status,.post-meta{font:14px/1.6 var(--sans);text-transform:none;letter-spacing:0;color:var(--muted)}
+.content-section>.sidenote{font-size:16px;line-height:1.6}
+.work-media figcaption{font-size:14px;line-height:1.5}
+.stat .k{font-size:14px;text-transform:none;letter-spacing:0}
+.hero h1{margin-top:0}

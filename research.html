@@ -21,19 +21,17 @@
 </header>
 <main id="main">
 <div class="collection-intro">
-<p class="eyebrow">Projects &amp; methods</p>
 <h1>Research in detail.</h1>
 <p>Long-horizon manipulation, post-training, and learning to act in the physical world.</p>
 <p>Mechatronics Engineering + AI at the University of Waterloo, working on foundational models and robot learning for manipulation. Currently a Founding Research Engineer at <a href="https://preload.ai/" target="_blank" rel="noopener"><b>Preload</b></a> (YC F26) and an accelerated <b>MASc</b> researcher in robotics at Waterloo under <a href="https://scholar.google.com/citations?user=_gfwCNwAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Stephen L. Smith</b></a>; previously a Research Engineer at <a href="https://www.axibo.com/" target="_blank" rel="noopener"><b>AXIBO</b></a> under <a href="https://scholar.google.ca/citations?user=HJDUjeIAAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>Vidyasagar Rajendran</b></a>.</p><a href="index.html#research">← Selected work</a>
 </div>
 <section id="research" class="content-section" aria-labelledby="heading-research">
-<div class="section-heading"><span class="eyebrow">01</span>
-<h2 id="heading-research">Research &amp; engineering</h2>
+<div class="section-heading"><h2 id="heading-research">Research &amp; engineering</h2>
 </div>
       <p>Research proposals, deployed manipulation systems, and independent engineering projects. Status and scope are noted with each project.</p>
 
       <!-- Origami (IROS 2026) -->
-      <h3 class="sub"><span class="no">1</span> Bimanual Dexterous Origami: the IROS 2026 Robotic Origami Challenge</h3>
+      <h3 class="sub">Bimanual Dexterous Origami: the IROS 2026 Robotic Origami Challenge</h3>
       <p class="sidenote"><b>Proposal</b><br><a class="ref" href="preprints/origami-moh.html">Read Origami-MoH &rarr;</a>
 </p>
       <p>For the IROS 2026 Robotic Origami Challenge, I'm developing autonomous paper folding on a 65-DoF bimanual dexterous platform with rich tactile sensing. The approach makes a <b>π0.5</b> flow policy <b>reactive</b> (multi-horizon action prediction with disagreement-based replanning) and <b>contact-aware</b> (progressive tactile fusion, escalating from proprioceptive concatenation to a force-aware mixture-of-experts action decoder), trained as a single vision-conditioned policy over a fixed six-fold sequence.</p>
@@ -64,9 +62,9 @@
       </div>
 
       <!-- Junior -->
-      <h3 class="sub"><span class="no">2</span> A Deployed Bimanual Manipulation Policy Stack: <i>Junior</i>
+      <h3 class="sub">A Deployed Bimanual Manipulation Policy Stack: <i>Junior</i>
 </h3>
-      <p class="sidenote"><b>Role</b><br>End-to-end ownership: demo-collection hardware → policy training → closed-loop deployment on Junior's dual arms.</p>
+      <p class="sidenote">End-to-end ownership: demo-collection hardware → policy training → closed-loop deployment on Junior's dual arms.</p>
 
       <figure class="photo-fig">
         <div class="photo-row">
@@ -121,8 +119,8 @@
       </div>
 
       <!-- 2.2 DSRL -->
-      <h3 class="sub"><span class="no">3</span> Noise-Space RL Fine-Tuning of Flow-Matching Policies</h3>
-      <p class="sidenote"><b>Basis</b><br>DSRL: <i>Steering Your Diffusion Policy with Latent Space Reinforcement Learning</i>, Wagenmaker et al., CoRL 2025.</p>
+      <h3 class="sub">Noise-Space RL Fine-Tuning of Flow-Matching Policies</h3>
+      <p class="sidenote">DSRL: <i>Steering Your Diffusion Policy with Latent Space Reinforcement Learning</i>, Wagenmaker et al., CoRL 2025.</p>
       <p>Fine-tuning a diffusion or flow policy's weights with RL is unstable and demands full access to model internals, while behavior-cloned policies plateau without costly additional demonstrations. DSRL sidesteps both: instead of updating weights, it trains a small RL agent to select the <b>noise seed</b> that initializes denoising, steering a frozen, black-box base policy toward better behavior.</p>
       <p>I applied DSRL-style noise-space RL to our deployed VLA policy's action head, training a lightweight SAC agent (~500K parameters) to pick the seed that steers the frozen base policy. Because RL runs over the latent-noise space, never through the denoiser, so no gradients touch the base weights and no model internals are required. This post-training contributed to a <b>30% manipulation-performance gain over imitation baselines</b>, adapting a frozen policy without modifying its weights or collecting extra demonstrations.</p>
 
@@ -165,8 +163,8 @@
       </div>
 
       <!-- 2.3 Latent WAM -->
-      <h3 class="sub"><span class="no">4</span> Latent World-Action Models (VLA-JEPA)</h3>
-      <p class="sidenote"><b>Basis</b><br>VLA-JEPA: <i>Enhancing Vision-Language-Action Models with a Latent World Model</i>, Sun et al., 2026.</p>
+      <h3 class="sub">Latent World-Action Models (VLA-JEPA)</h3>
+      <p class="sidenote">VLA-JEPA: <i>Enhancing Vision-Language-Action Models with a Latent World Model</i>, Sun et al., 2026.</p>
       <p>Standard VLA policies map observations directly to actions without modeling how the scene will evolve, and pixel-space prediction is brittle to appearance and camera changes. Following VLA-JEPA, I built action-conditioned latent world-action models that predict future <b>latent</b> states rather than pixels, a leakage-free formulation in which future frames are only ever targets, never inputs.</p>
       <p>The model encodes the current observation plus action context into a latent representation and predicts 10-step, action-conditioned latent dynamics with no pixel reconstruction. A two-stage recipe (JEPA-style pretraining followed by action-head fine-tuning) integrates the predicted latent rollouts with downstream VLA action heads. I evaluated rollout consistency across manipulation trajectories to assess temporal coherence of the learned dynamics.</p>
 
@@ -221,8 +219,8 @@
       </div>
 
       <!-- Rocky -->
-      <h3 class="sub" id="rocky"><span class="no">5</span> Rocky: a five-legged walking robot</h3>
-      <p class="sidenote"><b>Build</b><br><a class="ref" href="https://github.com/ryanrahman27/rocky" target="_blank" rel="noopener">Code on GitHub &rarr;</a>
+      <h3 class="sub" id="rocky">Rocky: a five-legged walking robot</h3>
+      <p class="sidenote"><a class="ref" href="https://github.com/ryanrahman27/rocky" target="_blank" rel="noopener">Code on GitHub &rarr;</a>
 </p>
       <p>Rocky is a pentapod I designed and trained end to end: a 250 mm pentagonal body carrying five identical 342 mm limbs at 72° spacing, one of which doubles as a manipulator. The repo takes it from a Fusion 360 CAD master to a simulation model (MJCF / URDF), an analytic wave gait, and a PPO locomotion policy in MuJoCo (mjlab). Sixteen Feetech STS3215 joints, 4.17 kg all-up.</p>
 
@@ -260,8 +258,7 @@
 <div><a class="home-link" href="index.html">Ryan Rahman</a>
 <p>Robot learning &amp; manipulation</p>
 </div>
-<div class="footer-links"><a href="mailto:r8rahman@uwaterloo.ca">Email ↗</a><a href="https://x.com/ryanrahman360">X / Twitter ↗</a><a href="https://github.com/ryanrahman27">GitHub ↗</a><a href="https://www.linkedin.com/in/ryan-rahman27/">LinkedIn ↗</a><span class="eyebrow">Updated 8 October 2026</span>
-</div>
+<div class="footer-links"><a href="mailto:r8rahman@uwaterloo.ca">Email ↗</a><a href="https://x.com/ryanrahman360">X / Twitter ↗</a><a href="https://github.com/ryanrahman27">GitHub ↗</a><a href="https://www.linkedin.com/in/ryan-rahman27/">LinkedIn ↗</a></div>
 </footer>
 </div>
 </body>

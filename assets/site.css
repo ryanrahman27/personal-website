@@ -173,3 +173,12 @@ img{max-width:100%}
 .work-media figcaption{font-size:14px;line-height:1.5}
 .stat .k{font-size:14px;text-transform:none;letter-spacing:0}
 .hero h1{margin-top:0}
+.motion-preview{position:relative}
+.motion-preview>a{display:block}
+.preview-toggle{position:absolute;right:12px;bottom:12px;min-height:44px;padding:8px 14px;border:1px solid var(--rule);border-radius:4px;background:var(--bg);color:var(--text);font:500 14px/1.4 var(--sans);cursor:pointer}
+.preview-toggle:hover{background:#fff}
+.preview-toggle:focus-visible{outline:2px solid var(--link);outline-offset:4px}
+.preview-toggle[hidden]{display:none}
+.media-trigger{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
+.media-trigger:focus-visible,.motion-preview video:focus-visible{outline:2px solid var(--link);outline-offset:4px}
+.motion-preview video{cursor:pointer}

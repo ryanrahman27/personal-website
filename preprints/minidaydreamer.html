@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>MiniDayDreamer · Ryan Rahman</title>
+<meta name="description" content="MiniDayDreamer: training noise steering in a learned robot world model to improve release timing in cube stacking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/legacy.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+.contact-paper{max-width:900px;margin:auto}
+.contact-paper .collection-intro h1{font-size:clamp(32px,5vw,52px);line-height:1.15}
+.contact-paper section{margin:44px 0}
+.contact-paper h2{font-size:28px;line-height:1.3}
+.contact-paper p{font-size:18px;line-height:1.75}
+.contact-paper figure{margin:28px 0}
+.contact-paper figure img{display:block;width:100%;height:auto}
+.contact-paper figcaption{font-size:15px;line-height:1.6;margin-top:16px;color:var(--muted)}
+.contact-paper code{overflow-wrap:anywhere}
+.results-table{overflow-x:auto;margin:24px 0}
+.results-table table{width:100%;border-collapse:collapse;font-size:16px}
+.results-table th,.results-table td{text-align:left;padding:14px 12px;border-bottom:1px solid var(--rule)}
+.contact-paper .paper-figure{display:block;width:100%;height:auto;margin:20px 0}.contact-paper .figure-caption{font-size:15px;color:var(--muted)}.contact-paper h2{margin-top:44px}.contact-paper h3{font-size:22px;margin-top:30px}.equation{text-align:center;padding:20px;background:var(--soft)}</style><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+</head>
+<body><a class="skip-link" href="#main">Skip to content</a>
+<div class="site-shell">
+<header class="site-header"><a class="home-link" href="../index.html" aria-label="Ryan Rahman home">Ryan Rahman<span class="brand-dot">.</span></a>
+<nav aria-label="Main navigation"><a href="../research.html">Research</a><a href="../experience.html">Experience</a><a href="../preprints.html" aria-current="page">Preprints</a><a href="../writing.html">Writing</a></nav>
+</header>
+<main id="main"><article class="contact-paper"><header class="collection-intro"><a href="../preprints.html">← Preprints &amp; reports</a><h1>MiniDayDreamer</h1></header><p>The first time you watch the frozen policy fail, it looks like a successful stack. The arm picks up the red cube, carries it across the table and lowers it onto blue. Then it lifts red back into the air. The fingers never opened.</p>
+<p>We wanted to see whether a robot that already knew most of the task could learn that last decision in its dreams. We froze its policy and trained a second, much smaller controller inside a learned world model. The only thing it could change was the noise going into the policy. We borrowed that idea from Diffusion Steering via Reinforcement Learning (DSRL).</p>
+<h2>Watch the same placement twice</h2>
+<h3>Frozen RGB policy</h3>
+<img class="paper-figure" src="../assets/minidaydreamer/frozen.jpg" alt="Frozen RGB policy: approach, release opportunity, and end of trial, still holding the red cube." loading="lazy">
+<h3>With dream-trained steering</h3>
+<img class="paper-figure" src="../assets/minidaydreamer/steered.jpg" alt="Dream-trained steering: matched approach, release, and completed red-on-blue stack." loading="lazy">
+<p class="figure-caption">Matched Isaac replays of scene 1310005. Each row shows the approach, the first few ticks after the release opportunity, and the end of the trial. Both runs started with the same scene and noise seed.</p>
+<p>In the lower row, the gripper received an open command at tick 132. Red was 2.1 mm from the center of blue and 0.3 mm below nominal stacking height. That was close enough. In the upper row the gripper held on for the rest of the episode. A fixed noise shift also stacked this particular scene. To find out what the learned steering added, we had to compare them across more scenes.</p>
+<h2>First, give the arm the cube positions</h2>
+<p>We started in NVIDIA Isaac with a Franka arm and privileged simulator state. Both the policy and the world model could read the positions of the hand and the cubes directly. This let us test the steering idea before asking a camera model to infer where everything was.</p>
+<p>Our first imitation policy learned from 24 successful demonstrations. It lifted the cube on all 50 test scenes and stacked it on two. Training a noise controller in a world model fitted to the demonstrations produced one stack. Adding varied rollouts to the world-model data produced two. Watching the arm lift red was a poor way to judge how much of the task it had learned.</p>
+<h3>The cube was already in the wrong place</h3>
+<p>We gave the recurrent state-space model (RSSM) six recorded actions and asked where red would end up. A prediction that simply left red at its last measured position beat both of our models. Looking at the first tick exposed part of the problem. The model had to reconstruct the cube&#x27;s absolute position from memory, and that reconstruction had already drifted before it imagined any actions.</p>
+<div class="results-table"><table><tr><th>Six-tick cube forecast, mean error</th><th>Demos only</th><th>With varied rollouts</th></tr><tr><td>Predict no movement</td><td>9.1 mm</td><td>9.1 mm</td></tr><tr><td>Original absolute-position RSSM</td><td>63.1 mm</td><td>42.8 mm</td></tr><tr><td>RSSM anchored at the measured state</td><td>4.7 mm</td><td>2.7 mm</td></tr></table></div>
+<p>We carried the measured position and latest displacement into the recurrent state, trained it to predict changes in position, and included six-step forecasts in the loss. The table uses the same 705 windows from 12 separate scenes for every row. This repair gave us a model accurate enough to investigate decisions near release.</p>
+<p>A better forecast did not immediately make a better controller. In a test on 50 new scenes, extending imagination from six ticks to 24 took the varied-data actor from four stacks to three. We also tried computing reward directly from predicted positions. With a more capable base on a different bank of 100 scenes, the base stacked 60 times, steering with a learned reward stacked 51 times, and steering with the direct reward stacked 48 times. This sent us back to the failed trajectories to look for a particular action worth changing.</p>
+<p>In a later state-input experiment, we trained on imagined trajectories with a reward for releasing near the target. On 128 fresh scenes with two matched noise draws each, stacking rose from <strong>59.8% to 78.7%</strong>, averaged over five steering seeds. All five beat the frozen base. The paired 95% interval for the gain was +10.9 to +27.0 percentage points. An otherwise matched actor using the older reward reached 77.7%. The experiment gave us a reason to try steering from cameras, while leaving open how much the new reward helped. <a href="https://github.com/ryanrahman27/MiniDayDreamer/tree/main/results/isaac-release-margin-v11">State-input trial records.</a></p>
+<h2>What the camera model dreams</h2>
+<p>The RGB experiment used a different policy. We trained a flow-matching policy on table and wrist images and expert actions from 72 successful demonstrations. The visual RSSM learned from 24 of those demos and 72 varied rollouts. Its memory tracks image features and task progress across actions. An imagined step predicts the next features, so we can feed those features into the frozen policy and take another step without rendering a frame.</p>
+<p>For a camera encoding <var>o<sub>t</sub></var> and a Gaussian noise sample ε, the policy outputs a three-action chunk. A shift Δε changes the chunk the same function generates.</p>
+<p class="equation" aria-label="Action chunk equals the frozen policy applied to camera features and shifted noise">a<sub>t:t+2</sub> = π<sub>θ</sub>(o<sub>t</sub>, ε + Δε)</p>
+<p>The weights θ stay fixed. We shift only the gripper coordinate of the noise. The flow still generates the entire action chunk, so changing that coordinate can also perturb the arm motion.</p>
+<img class="paper-figure" src="../assets/minidaydreamer/gripper-command.svg" alt="Gripper command versus noise shift, and commands over 24-tick imagined branches from the same world-model memory." loading="lazy">
+<p class="figure-caption">One release opportunity from the filmed scene. At left, holding the camera features and starting noise fixed, increasing the shift takes the first gripper command from +0.91 (close) to -0.81 (open). At right, each curve follows the gripper commands along one 24-tick imagined branch from the same RSSM memory.</p>
+<h3>A fixed shift taught us what to learn</h3>
+<p>We revisited 127 RGB runs that had lifted and failed. Of the 103 that reproduced the failure on replay, 23 reached the placement window and never opened. We then tested two release proposals on identical inputs from 372 recorded interventions. A fixed shift opened the gripper for all three ticks on every input. The earlier learned proposal did so on only 251. We kept the reliable shift and trained the new actor to choose between applying it now and waiting another chunk.</p>
+<p>In imagination, both branches start with the same memory and Gaussian draw. Opening earns more when the cubes appear centered and at stacking height in the two views. We tracked the red and blue centers in each camera and used expert releases to estimate what a seated cube looks like. This cue depends on the cube colors and camera layout. The RSSM exaggerated how far red would descend, so we calibrated its vertical forecast on 21 six-tick development windows. The fitted multiplier was 0.261. With that correction frozen, each of five actors trained for 1.29 million imagined action ticks. Isaac supplied the held-out test.</p>
+<h2>Back at the table</h2>
+<p>We paired runs by scene and starting noise. A stack counted only if the gripper was open, the cubes were aligned and nearly still, and the placement held for the final eight ticks. We then asked which controllers finished the job <em>on the 164 pairs where the frozen base or the learned actor stacked</em>. Every row uses those same pairs. Trials where both missed fall outside this comparison.</p>
+<div class="results-table"><table><tr><th>Controller</th><th>Stacks</th><th>Share of 164</th></tr><tr><td>Frozen RGB policy</td><td>97/164</td><td>59.1%</td></tr><tr><td>Fixed noise shift</td><td>131/164</td><td>79.9%</td></tr><tr><td>Fixed shift with the actor&#x27;s visual trigger</td><td>136/164</td><td>82.9%</td></tr><tr><td><strong>RSSM-trained steering</strong></td><td><strong>155/164</strong></td><td><strong>94.5%</strong></td></tr></table></div>
+<p>There were 88 stacks that both policies made, 67 that only steering made, and nine that only the frozen policy made. That is 58 more stacks. Selecting pairs where at least one policy succeeded raises both percentages and favors those two policies in a comparison with a third. Across the full, unfiltered evaluation, steering gained <strong>18.1 percentage points</strong> over the frozen base (paired 95% interval +12.5 to +24.1). Its gain over the fixed shift with the same trigger was 1.6 points (-2.5 to +5.6). A well-timed fixed shift explains much of the improvement.</p>
+<h3>What happened with a better base?</h3>
+<p>We trained another RGB policy on pickup and alignment recovery examples. It stacked on 71.3% of its fresh trials. Turning on the selected steering actor brought that down to 65.6%. Of the 64 stacks steering lost, 46 had an open <em>command</em> issued too high. Only 13 were still high when the measured finger aperture exceeded 35 mm. The cube often continued descending between the command and the release. A later gate acted just twice on a fresh bank and changed neither paired outcome.</p>
+<p>That distinction is what we would measure first in the next experiment. On the weak policy, the robot could already make a stack if someone told it when to let go. The stronger policy often had that timing right on its own. A controller trying to help it needs to predict where the cube will be when the fingers separate.</p>
+<p><strong>Code and reading.</strong> <a href="https://github.com/ryanrahman27/MiniDayDreamer/blob/main/docs/rgb-stacking.md">MiniDayDreamer implementation and reproduction guide</a>.</p>
+<p>The experiment draws on <a href="https://danijar.com/project/daydreamer/">DayDreamer</a> and <a href="https://diffusion-steering.github.io/">Diffusion Steering via Reinforcement Learning</a>. Ishan Shah&#x27;s <a href="https://www.ishanshah.org/writing/tiny-dreamer">TinyDreamer walkthrough</a> inspired the format of this note.</p></article></main>
+<footer class="site-footer">
+<div><a class="home-link" href="../index.html">Ryan Rahman</a>
+<p>Robot learning &amp; manipulation</p>
+</div>
+<div class="footer-links"><a href="mailto:r8rahman@uwaterloo.ca">Email ↗</a><a href="https://x.com/ryanrahman360">X / Twitter ↗</a><a href="https://github.com/ryanrahman27">GitHub ↗</a><a href="https://www.linkedin.com/in/ryan-rahman27/">LinkedIn ↗</a></div>
+</footer>
+</div>
+
+</body>
+</html>

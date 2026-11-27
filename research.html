@@ -31,6 +31,33 @@
 </div>
       <p>Research proposals, deployed manipulation systems, and independent engineering projects. Status and scope are noted with each project.</p>
 
+<details class="research-project" id="delicate-grasping">
+<summary><img class="project-thumb" src="assets/openarm-contact/contact-policy-architecture.png" alt="" width="160" height="120" loading="lazy"><span class="project-overview"><span class="project-title">Learning when to grasp delicate objects</span><span class="project-description">A contact-conditioned policy learns when to grasp while motor feedback determines where the fingers stop.</span></span><span class="project-indicator" aria-hidden="true"></span></summary>
+<div class="project-body contact-research">
+<h3 class="sub">Learning when to grasp delicate objects with motor feedback</h3>
+<p class="sidenote">Work in progress · 24 November 2026</p>
+<section><h4>Abstract</h4><p>We train a contact-conditioned π₀.₅ policy to decide when to grasp. A local controller uses motor feedback to determine where the fingers stop. We combine human contact labels with robot demonstrations and examine six recorded fortune-cookie grasps. In a preliminary delicate-object pilot, the contact system completed 23 of 30 attempts and stock π₀.₅ completed 14 of 30. A matched robot-only contact policy is needed to isolate the contribution of human supervision.</p></section>
+<section><h4>Policy and supervision</h4>
+<p>Starting from π₀.₅ <a href="#contact-reference-1">[1]</a>, the policy reads the chest image, instruction, seven measured arm angles, finger position and available contact feedback. A prediction head uses these observations to produce a 30-step contact plan.</p>
+<figure><img src="assets/openarm-contact/contact-policy-architecture.png" alt="Human contact labels supervise a 30-step contact plan. Robot controller phases supervise the plan's grasp request, and robot joint commands supervise arm motion. The action expert uses projected plan tokens. The gripper controller follows the grasp request and uses measured motor load and finger position to seek and hold contact or release." loading="lazy">
+<figcaption>Human contact labels and robot grasp requests supervise the plan. Robot joint commands supervise the action expert, which attends to observations and projected plan tokens. The gripper channel requests closure or release. Motor feedback determines where closure stops.</figcaption></figure>
+<p>Each batch pairs 16 human and 16 robot windows. We mask the human action loss. On OpenArm, seek and hold label a grasp request, and open labels release. We fit normalization on 89 robot training episodes, validate on 18, reserve 25 for test and train for 10,000 updates.</p></section>
+<section><h4>Preliminary robot comparison</h4>
+<p>Operators scored five groups of six attempts per policy using fortune cookies, dried flowers and wafer cones. Stock π₀.₅ uses chest vision, language and proprioception to predict arm motion and a binary gripper request.</p>
+<div class="results-table"><table><thead><tr><th scope="col">Deployed policy</th><th scope="col">Successes in each group of 6</th><th scope="col">Total</th></tr></thead>
+<tbody><tr><th scope="row">Mixed contact policy</th><td>5, 3, 5, 5, 5</td><td>23/30 (76.7%)</td></tr>
+<tr><th scope="row">Stock π₀.₅ baseline</th><td>2, 4, 3, 2, 3</td><td>14/30 (46.7%)</td></tr></tbody></table></div>
+<p>Training sources, gripper control and horizon differed (30 steps for contact, 50 for stock). Failure causes were not independently adjudicated. The planned 144-trial evaluation includes a robot-only contact policy with the same controller to isolate human co-training across contact, goal, spatial and two-stage tasks.</p></section>
+<section><h4>Motor feedback during fortune cookie grasps</h4>
+<p>We selected six teleoperated grasps from the November 17 pick-and-place collection after inspecting chest-camera frames for a visible cookie between the fingers. All used a 16 mm/s seek speed in the finger-joint coordinate. The controller stops advancing its position target on a threshold crossing. A sustained crossing for 150 ms latches contact and enters hold. Releasing the grasp clears the latch.</p>
+<figure><img src="assets/openarm-contact/cookie-grasp-feedback.png" alt="Chest camera frames show a fortune cookie during a grasp in episode 0016. Aligned traces show finger position, motor torque and latched contact across six grasps." loading="lazy">
+<figcaption>A shows matched chest-camera crops from episode 0016. Arrows identify the handled cookie. Times are relative to the first positive controller flag and use camera header timestamps. B marks the frame times on the measured finger-position trace. Shading marks hold. C aligns six grasps to their latches. The horizontal dashed line marks 2,120 raw torque counts. Motor signals use motor timestamps, the flag uses controller timestamps, and lines connect unsmoothed samples. All six flags coincide in C.</figcaption></figure></section>
+<section><h4>What the latch measures</h4>
+<p>Finger position at latch ranged from 12.5 to 20.9 mm. In all six grasps the commanded position stayed fixed through hold, which lasted 2.17–3.80 s. In four grasps the raw torque fell below threshold during hold while the flag stayed high. The latch records the controller's grasp state. These traces provide neither an independent timestamp of first touch nor a calibrated measure of fingertip force or cookie damage.</p>
+<p>Trace source. OpenArm pick-place-contact-2026-11-17, <code>/cookie_gripper/state</code>, episodes 0008, 0011, 0016, 0021, 0034 and 0036. Chest frames from <code>/cam_chest/image_raw/compressed</code>.</p></section>
+<section><h4>References</h4><p id="contact-reference-1">[1] Physical Intelligence (2025). π₀.₅: a Vision-Language-Action Model with Open-World Generalization. arXiv:2504.16054.</p></section>
+</div>
+</details>
 <details class="research-project" id="origami">
 <summary><img class="project-thumb" src="assets/origami-poster.jpg" alt="" width="160" height="120" loading="lazy"><span class="project-overview"><span class="project-title">Origami-MoH</span><span class="project-description">Tactile-aware, long-horizon paper folding on a bimanual dexterous platform.</span></span><span class="project-indicator" aria-hidden="true"></span></summary>
 <div class="project-body">

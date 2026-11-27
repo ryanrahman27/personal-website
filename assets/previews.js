@@ -13,6 +13,8 @@ document.querySelectorAll('.motion-preview').forEach(preview => {
     video.loop = true;
     video.tabIndex = 0;
     video.setAttribute('role', 'button');
+    video.addEventListener('playing', () => preview.classList.toggle('is-playing', playing));
+    video.addEventListener('pause', () => preview.classList.remove('is-playing'));
   }
   function label() {
     trigger.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} ${name} preview`);
@@ -24,7 +26,11 @@ document.querySelectorAll('.motion-preview').forEach(preview => {
       playing = next;
       if (video) {
         if (playing) video.play().then(() => { if (!playing) video.pause(); }).catch(() => { playing = false; label(); });
-        else video.pause();
+        else {
+          video.pause();
+          preview.classList.remove('is-playing');
+          if (preview.classList.contains('cover-preview')) video.currentTime = 0;
+        }
       } else image.src = playing ? preview.dataset.animation : still;
     }
     label();

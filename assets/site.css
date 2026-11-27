@@ -182,6 +182,9 @@ img{max-width:100%}
 .media-trigger{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
 .media-trigger:focus-visible,.motion-preview video:focus-visible{outline:2px solid var(--link);outline-offset:4px}
 .motion-preview video{cursor:pointer}
+.cover-preview video{object-fit:contain;background:#050707}
+.cover-preview .preview-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.cover-preview.is-playing .preview-cover{visibility:hidden}
 
 /* Independent research disclosures keep the overview compact. */
 .research-project{border-bottom:1px solid var(--rule);scroll-margin-top:32px}
